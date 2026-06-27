@@ -7,7 +7,7 @@ export default async () =>
     await rsConfig({
       framework: 'react',
       plugins: [pluginReact()],
-      appName: 'galaxy-react',
+      appName: 'AlephYeah',
       port: 3076,
       proxy: {
         '/api': {
@@ -20,6 +20,32 @@ export default async () =>
         entry: {
           index: './src/index.tsx',
         },
+      },
+      html: {
+        tags: [
+          {
+            tag: 'link',
+            attrs: {
+              rel: 'preconnect',
+              href: 'https://fonts.googleapis.com',
+            },
+          },
+          {
+            tag: 'link',
+            attrs: {
+              rel: 'preconnect',
+              href: 'https://fonts.gstatic.com',
+              crossorigin: '',
+            },
+          },
+          {
+            tag: 'link',
+            attrs: {
+              rel: 'stylesheet',
+              href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',
+            },
+          },
+        ],
       },
     },
   );

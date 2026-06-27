@@ -1,11 +1,12 @@
-import type { HtmlTagDescriptor, ProxyOptions } from '@rsbuild/core';
+import type { ProxyOptions } from '@rsbuild/core';
 import type { IBuildOptions } from '../config';
 import { defineConfig, loadEnv } from '@rsbuild/core';
-import { aliasConfig, resolveFramework, resolvePlatform, resolveToolsPlugins, tags } from '../config';
+import { aliasConfig, resolveFramework, resolveToolsPlugins } from '../config';
 
 const { publicVars } = loadEnv({
   prefixes: ['PUBLIC_', 'TANSTACK_', 'CLERK_', 'API_', 'MCP_', 'COMMIT_'],
 });
+
 function buildProxy(proxy: IBuildOptions['proxy'] = {}): Record<string, ProxyOptions> {
   return Object.fromEntries(
     Object.entries(proxy).map(([key, value]) => {
@@ -20,8 +21,7 @@ function buildProxy(proxy: IBuildOptions['proxy'] = {}): Record<string, ProxyOpt
 export default async (options: IBuildOptions) => {
   const { baseUrl = '/', plugins = [], port = 3074, proxy = {} } = options;
   const framework = resolveFramework(options);
-  const platform = resolvePlatform(options);
-  const toolsPlugins = await resolveToolsPlugins(framework, platform);
+  const toolsPlugins = await resolveToolsPlugins(framework);
 
   return defineConfig({
     plugins: [...plugins],
@@ -58,7 +58,6 @@ export default async (options: IBuildOptions) => {
         viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover',
       },
       title: options.appName,
-      tags: (platform === 'h5' ? tags : []) as HtmlTagDescriptor[],
     },
     performance: {
       buildCache: false,

@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { useToggle } from 'usehooks-ts';
-
-import { cn } from './lib/cn';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { Home } from './pages/Home';
+import { Projects } from './pages/Projects';
+import { Documents } from './pages/Documents';
+import { Dependencies } from './pages/Dependencies';
+import { About } from './pages/About';
 
 const App = () => {
-  const [iconlist] = useState<string[]>(['svgicon--one', 'svgicon--two', 'svgicon--fill-msg']);
-  const [isActive, toggle] = useToggle(false);
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold text-blue-600">Hello World</h1>
-      <button type="button" className="rounded bg-blue-600 px-4 py-2 text-white" onClick={toggle}>
-        {isActive ? 'Active' : 'Inactive'}
-      </button>
-
-      {iconlist.map((item) => (
-        <span key={item} className={cn(`icon-[${item}] inline-block h-4 w-4`, isActive && 'text-red-500')} />
-      ))}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/dependencies" element={<Dependencies />} />
+          <Route path="/about" element={<About />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

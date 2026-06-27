@@ -67,7 +67,7 @@ This project uses Tailwind CSS v4 utility classes for styling. The import order 
 @config '../../tailwind.config.js';
 ```
 
-Icons use the `icon-[svgicon--xxx]` classname pattern:
+Icons use the `icon-[svgicon--{name}]` classname pattern:
 
 ```tsx
 <span className="icon-[svgicon--one] inline-block h-4 w-4" />

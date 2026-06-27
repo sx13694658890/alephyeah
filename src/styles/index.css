@@ -1,6 +1,58 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
 @config '../../tailwind.config.js';
+@source '../';
 
 @plugin "@iconify/tailwind4" {
   icon-sets: from-json(svgicon, './node_modules/@init-project/iconsvg/dist/svgicon.json');
+}
+
+@theme {
+  --color-background: #FAF8F5;
+  --color-foreground: #2D2A24;
+  --color-primary: #4A4540;
+  --color-accent: #9A8B7A;
+  --color-muted: #EDE9E4;
+  --color-border: #D9D2CB;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

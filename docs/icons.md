@@ -23,7 +23,7 @@ This loads all icons from the SVG icon JSON into the Iconify engine, making them
 The classname pattern is:
 
 ```
-icon-[svgicon--<icon-name>]
+icon-[svgicon--{icon-name}]
 ```
 
 The three demo icons currently defined are:
@@ -32,14 +32,14 @@ The three demo icons currently defined are:
 - `svgicon--two`
 - `svgicon--fill-msg`
 
-Use `icon-[svgicon--fill-X]` for filled-style variants.
+Use `icon-[svgicon--fill-{name}]` for filled-style variants.
 
 ## Adding New Icons
 
 1. Define the SVG icon in the `@init-project/iconsvg` package (located at `node_modules/@init-project/iconsvg/` in the source repo).
 2. Rebuild the `svgicon.json` manifest in that package.
 3. Run `pnpm install` to update the local copy.
-4. The new icon is immediately available via `icon-[svgicon--<name>]`.
+4. The new icon is immediately available via `icon-[svgicon--{name}]`.
 
 ## Styling Icons
 

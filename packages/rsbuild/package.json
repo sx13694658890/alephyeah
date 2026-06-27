@@ -13,13 +13,7 @@
     }
   },
   "dependencies": {
-    "@rsbuild/core": "^2.0.9",
-    "unplugin-auto-import": "^21.0.0",
-    "unplugin-vue-components": "^32.1.0",
-    "vue-router": "^5.1.0"
-  },
-  "devDependencies": {
-    "vue": "^3.5.26"
+    "@rsbuild/core": "^2.0.9"
   },
   "engines": {
     "node": ">=20",

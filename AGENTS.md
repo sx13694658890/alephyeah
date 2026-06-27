@@ -40,7 +40,7 @@ There are currently **no test, lint, or typecheck commands**. These should be ad
 - **Indentation**: 2 spaces, no tabs.
 - **Naming**: PascalCase for components and types; camelCase for functions, variables, hooks, and files.
 - **CSS**: Use Tailwind utility classes. For conditional class merging, use the `cn()` helper from `src/lib/cn.ts` (wraps `clsx` + `twMerge`).
-- **Icons**: Use the `icon-[svgicon--xxx]` classname pattern (powered by `@iconify/tailwind4` + `@init-project/iconsvg`). New icons must be defined in the `@init-project/iconsvg` package first.
+- **Icons**: Use the `icon-[svgicon--{name}]` classname pattern (powered by `@iconify/tailwind4` + `@init-project/iconsvg`). New icons must be defined in the `@init-project/iconsvg` package first.
 - **Exports**: Prefer named exports over default exports for functions and components.
 - **No lint tool is configured yet** — maintain consistency through code review.
 
