@@ -1,6 +1,6 @@
 import { mergeRsbuildConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
-import rsConfig from '@init-project/rsbuild';
+import rsConfig from './config';
 
 export default async () =>
   mergeRsbuildConfig(

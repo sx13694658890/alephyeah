@@ -15,5 +15,5 @@
     "skipLibCheck": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "rsbuild.config.ts"]
+  "include": ["src", "config", "rsbuild.config.ts"]
 }
