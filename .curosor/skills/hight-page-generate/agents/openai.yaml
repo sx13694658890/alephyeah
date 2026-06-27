@@ -1,0 +1,4 @@
+interface:
+  display_name: "高级页面生成"
+  short_description: "用 AI 生成有高级质感的页面。先定设计系统，再用 CSS 材质感、动效、3D 空间和组件系统四层模型把设计落地。"
+  default_prompt: "帮我生成一个高端、现代的页面"

@@ -37,18 +37,20 @@ const projects = [
 ];
 
 export const Projects = () => {
-  const titleRef = useScrollAnimation<HTMLDivElement>({});
+  const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 100 });
 
   return (
     <>
       <div ref={titleRef} className="mb-12">
-        <h1 className="mb-3 text-3xl font-light text-foreground">Projects</h1>
-        <p className="max-w-xl text-foreground/60">
+        <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
+          Projects
+        </h1>
+        <p className="max-w-xl text-foreground/60" data-animate style={{ opacity: 0 }}>
           Things I've built, contributed to, or spent too much time thinking about.
         </p>
       </div>
 
-      <AnimatedSection>
+      <AnimatedSection staggerDelay={110}>
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard key={project.title} {...project} />

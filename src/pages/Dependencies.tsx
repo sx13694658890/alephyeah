@@ -62,13 +62,15 @@ const dependencies: DependencyGroup[] = [
 ];
 
 export const Dependencies = () => {
-  const titleRef = useScrollAnimation<HTMLDivElement>({});
+  const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 90 });
 
   return (
     <>
       <div ref={titleRef} className="mb-12">
-        <h1 className="mb-3 text-3xl font-light text-foreground">Dependencies</h1>
-        <p className="max-w-xl text-foreground/60">
+        <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
+          Dependencies
+        </h1>
+        <p className="max-w-xl text-foreground/60" data-animate style={{ opacity: 0 }}>
           The component ecosystem and tools this project depends on — documented for easy reference.
         </p>
       </div>
@@ -83,11 +85,13 @@ export const Dependencies = () => {
 };
 
 const DependencyGroup = ({ group }: { group: DependencyGroup }) => {
-  const groupRef = useScrollAnimation<HTMLDivElement>({ stagger: 60 });
+  const groupRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 60 });
 
   return (
     <div ref={groupRef}>
-      <h2 className="mb-4 text-lg font-medium text-foreground">{group.group}</h2>
+      <h2 className="mb-4 text-lg font-medium text-foreground" data-animate style={{ opacity: 0 }}>
+        {group.group}
+      </h2>
       <div className="space-y-2">
         {group.items.map((item) => (
           <a

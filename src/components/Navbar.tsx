@@ -19,11 +19,11 @@ export const Navbar = () => {
   useEffect(() => {
     if (navRef.current) {
       animate(navRef.current, {
-        translateY: [-20, 0],
+        translateY: [-16, 0],
         opacity: [0, 1],
-        ease: 'outCubic',
-        duration: 600,
-        delay: 200,
+        ease: 'outExpo',
+        duration: 800,
+        delay: 150,
       });
     }
   }, []);
@@ -37,8 +37,8 @@ export const Navbar = () => {
         animate(indicatorRef.current, {
           left: rect.left - navRect.left,
           width: rect.width,
-          ease: 'outCubic',
-          duration: 400,
+          ease: 'outExpo',
+          duration: 500,
         });
       }
     }
@@ -49,7 +49,7 @@ export const Navbar = () => {
       ref={navRef}
       className="fixed left-1/2 top-6 z-50 -translate-x-1/2 opacity-0"
     >
-      <div className="relative flex items-center gap-1 rounded-full border border-border bg-white/70 px-2 py-1.5 shadow-sm backdrop-blur-lg">
+      <div className="relative flex items-center gap-1 rounded-full border border-border/80 bg-white/75 px-2 py-1.5 shadow-sm backdrop-blur-xl transition-shadow duration-300 hover:shadow-md">
         <div
           ref={indicatorRef}
           className="absolute bottom-1.5 top-1.5 rounded-full bg-accent/20 transition-all"
@@ -60,10 +60,12 @@ export const Navbar = () => {
             key={to}
             to={to}
             className={cn(
-              'relative z-10 rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-300',
+              'relative z-10 rounded-full px-4 py-1.5 text-sm font-medium',
+              'transition-all duration-300 ease-out',
+              'hover:scale-[1.04] active:scale-[0.98]',
               location.pathname === to
                 ? 'text-foreground'
-                : 'text-foreground/50 hover:text-foreground/80'
+                : 'text-foreground/50 hover:text-foreground/85'
             )}
           >
             {label}
