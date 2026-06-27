@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.js';
+
+@plugin "@iconify/tailwind4" {
+  icon-sets: from-json(svgicon, './node_modules/@init-project/iconsvg/dist/svgicon.json');
+}

@@ -1,0 +1,39 @@
+{
+  "name": "alephyeah",
+  "version": "1.0.0",
+  "private": true,
+  "description": "alephyeah app",
+  "type": "module",
+  "main": "src/index.tsx",
+  "types": "src/index.tsx",
+  "scripts": {
+    "dev": "rsbuild dev",
+    "dev:rsbuild": "rsbuild dev",
+    "build": "rsbuild build",
+    "build:rsbuild": "rsbuild build",
+    "deploy:cloudflare": "rsbuild build && wrangler pages deploy dist --project-name alephyeah"
+  },
+  "dependencies": {
+    "@init-project/iconsvg": "1.0.3",
+    "clsx": "^2.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "usehooks-ts": "^3.1.1"
+  },
+  "devDependencies": {
+    "@iconify/tailwind4": "^1.2.3",
+    "@rsbuild/plugin-react": "^2.0.1",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.3.0",
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.20.0"
+}
