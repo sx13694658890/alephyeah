@@ -1,3 +1,4 @@
+import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 interface DependencyGroup {
@@ -63,15 +64,16 @@ const dependencies: DependencyGroup[] = [
 
 export const Dependencies = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 90 });
+  const { t } = usePreferences();
 
   return (
     <>
       <div ref={titleRef} className="mb-12">
         <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
-          Dependencies
+          {t('dependencies.title')}
         </h1>
         <p className="max-w-xl text-foreground/60" data-animate style={{ opacity: 0 }}>
-          The component ecosystem and tools this project depends on — documented for easy reference.
+          {t('dependencies.subtitle')}
         </p>
       </div>
 

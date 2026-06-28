@@ -1,5 +1,6 @@
 import { ProjectCard } from '../components/ProjectCard';
 import { AnimatedSection } from '../components/AnimatedSection';
+import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const projects = [
@@ -38,15 +39,16 @@ const projects = [
 
 export const Projects = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 100 });
+  const { t } = usePreferences();
 
   return (
     <>
       <div ref={titleRef} className="mb-12">
         <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
-          Projects
+          {t('projects.title')}
         </h1>
         <p className="max-w-xl text-foreground/60" data-animate style={{ opacity: 0 }}>
-          Things I've built, contributed to, or spent too much time thinking about.
+          {t('projects.subtitle')}
         </p>
       </div>
 

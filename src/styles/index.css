@@ -6,13 +6,28 @@
   icon-sets: from-json(svgicon, './node_modules/@init-project/iconsvg/dist/svgicon.json');
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --color-background: #FAF8F5;
+  --color-background: #F5F0EA;
   --color-foreground: #2D2A24;
   --color-primary: #4A4540;
-  --color-accent: #9A8B7A;
-  --color-muted: #EDE9E4;
-  --color-border: #D9D2CB;
+  --color-accent: #8B7A68;
+  --color-muted: #E8E0D6;
+  --color-border: #D4C8BB;
+  --color-glass-tint: rgba(255, 252, 248, 0.52);
+  --color-glass-edge: rgba(255, 255, 255, 0.72);
+}
+
+html.dark {
+  --color-background: #171412;
+  --color-foreground: #F2EBE3;
+  --color-primary: #D4C5B5;
+  --color-accent: #B8A99A;
+  --color-muted: #2A2520;
+  --color-border: #3D3630;
+  --color-glass-tint: rgba(30, 26, 22, 0.55);
+  --color-glass-edge: rgba(255, 255, 255, 0.18);
 }
 
 ::selection {
@@ -22,14 +37,31 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+  scrollbar-gutter: stable;
 }
 
 body {
+  overflow-x: clip;
+  max-width: 100%;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--color-background);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(196, 181, 165, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(154, 139, 122, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 0% 20%, rgba(212, 197, 181, 0.14) 0%, transparent 45%);
   color: var(--color-foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark body {
+  background-image:
+    radial-gradient(ellipse 100% 70% at 50% -20%, rgba(154, 139, 122, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, rgba(90, 78, 68, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 40% at 0% 25%, rgba(120, 105, 92, 0.12) 0%, transparent 45%);
 }
 
 ::-webkit-scrollbar {
@@ -59,4 +91,26 @@ body {
 
 [data-animate] {
   will-change: transform, opacity;
+}
+
+.nav-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-scroll {
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .nav-glass:hover {
+    box-shadow:
+      0 14px 36px rgb(45 42 36 / 0.12),
+      0 4px 12px rgb(45 42 36 / 0.06),
+      inset 0 1px 0 rgb(255 255 255 / 0.8);
+  }
 }

@@ -1,3 +1,4 @@
+import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
 
@@ -85,15 +86,16 @@ const DocumentCard = ({
 export const Documents = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 90 });
   const listRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 80, delay: 100 });
+  const { t } = usePreferences();
 
   return (
     <>
       <div ref={titleRef} className="mb-12">
         <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
-          Documents
+          {t('documents.title')}
         </h1>
         <p className="max-w-xl text-foreground/60" data-animate style={{ opacity: 0 }}>
-          Notes, guides, and documentation — things worth writing down and sharing.
+          {t('documents.subtitle')}
         </p>
       </div>
 

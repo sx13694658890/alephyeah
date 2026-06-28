@@ -27,7 +27,7 @@ export const ProjectCard = ({ title, description, tags, href, className }: Proje
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       className={cn(
-        'group rounded-2xl border border-border bg-white/60 p-6 backdrop-blur-sm',
+        'group rounded-2xl border border-border bg-white/60 p-6 backdrop-blur-sm dark:bg-white/8',
         'shadow-sm transition-[box-shadow,border-color] duration-500 ease-out',
         'hover:border-accent/30 hover:shadow-xl hover:shadow-accent/5',
         href && 'cursor-pointer',

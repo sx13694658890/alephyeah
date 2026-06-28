@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sparkles, Stars } from '@react-three/drei';
 import * as THREE from 'three';
+import { usePreferences } from '../context/PreferencesContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
 type ShapeKind = 'icosahedron' | 'torus' | 'octahedron';
@@ -64,7 +65,7 @@ function FloatingShape({
   );
 }
 
-function SceneRig({ shapes }: { shapes: ShapeConfig[] }) {
+function SceneRig({ shapes, fogColor }: { shapes: ShapeConfig[]; fogColor: string }) {
   const groupRef = useRef<THREE.Group>(null);
   const mouse = useRef({ x: 0, y: 0 });
   const scroll = useRef(0);
@@ -118,7 +119,7 @@ function SceneRig({ shapes }: { shapes: ShapeConfig[] }) {
       <ambientLight intensity={0.45} />
       <pointLight position={[8, 6, 10]} intensity={0.6} color="#D4C5B5" />
       <pointLight position={[-6, -4, 6]} intensity={0.35} color="#9A8B7A" />
-      <fog attach="fog" args={['#FAF8F5', 12, 28]} />
+      <fog attach="fog" args={[fogColor, 12, 28]} />
 
       <Stars
         radius={40}
@@ -157,6 +158,8 @@ const SHAPES: ShapeConfig[] = [
 
 export const HeroScene = () => {
   const reducedMotion = useReducedMotion();
+  const { resolvedTheme } = usePreferences();
+  const fogColor = resolvedTheme === 'dark' ? '#171412' : '#F5F0EA';
 
   if (reducedMotion) {
     return (
@@ -176,7 +179,7 @@ export const HeroScene = () => {
         dpr={[1, 1.5]}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
       >
-        <SceneRig shapes={SHAPES} />
+        <SceneRig shapes={SHAPES} fogColor={fogColor} />
       </Canvas>
       <div
         className="absolute inset-0"

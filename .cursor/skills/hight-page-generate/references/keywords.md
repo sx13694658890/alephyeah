@@ -28,7 +28,7 @@
 | `parallax` | 视差，增强空间纵深 |
 | `spring-animation` | 弹性动画，增加生命力（需克制） |
 
-## Three.js / WebGL
+## Three.js / WebGL / anime.js
 
 | 关键词 | 作用 |
 |--------|------|
