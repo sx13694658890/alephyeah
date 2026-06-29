@@ -170,12 +170,12 @@ export const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className="fixed inset-x-0 top-0 z-50 opacity-0 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(4.25rem,env(safe-area-inset-right))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pr-[max(0.75rem,env(safe-area-inset-right))]"
+      className="fixed inset-x-0 top-0 z-50 opacity-0 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pr-[max(3.5rem,calc(env(safe-area-inset-right)+2.5rem))]"
     >
       <div className="mx-auto flex w-full min-w-0 max-w-5xl justify-center">
         <Glass
           className={cn(
-            'nav-scroll nav-glass w-fit min-w-0 max-w-[calc(100vw-5.5rem)] overflow-x-auto overscroll-x-contain sm:max-w-[calc(100vw-1.5rem)]',
+            'nav-scroll nav-glass w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain sm:w-fit sm:max-w-[calc(100vw-4rem)]',
             'rounded-[2rem]',
             'border border-white/65 bg-gradient-to-b from-white/55 via-white/38 to-white/22',
             'shadow-[0_10px_40px_rgba(45,42,36,0.1),0_2px_8px_rgba(45,42,36,0.06),inset_0_1px_0_rgba(255,255,255,0.75)]',
