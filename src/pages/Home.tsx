@@ -4,6 +4,7 @@ import { usePreferences } from '../context/PreferencesContext';
 import { useParallaxScroll } from '../hooks/useParallaxScroll';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
+import { SkillSection } from '../components/skill/SkillSection';
 
 let heroIntroPlayed = false;
 
@@ -78,10 +79,19 @@ export const Home = () => {
         </p>
       </AnimatedSection>
 
+<<<<<<< HEAD
       <AnimatedSection className="mb-16" staggerDelay={120} delay={100}>
         <h2 className="mb-8 text-2xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
           {t('home.featuredTitle')}
         </h2>
+=======
+      <AnimatedSection className="mb-24">
+        <SkillSection />
+      </AnimatedSection>
+
+      <AnimatedSection className="mb-16">
+        <h2 className="mb-8 text-2xl font-light text-foreground">Featured Work</h2>
+>>>>>>> feature/technologies
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featuredProjects.map((project) => (
             <ProjectCard key={project.title} {...project} />

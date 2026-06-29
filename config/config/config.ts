@@ -10,6 +10,7 @@ export interface IBuildOptions {
   framework?: Framework;
 }
 export const aliasConfig: Record<string, string> = {
+  '@': './src',
   '~': './src',
   '~~': './',
 };

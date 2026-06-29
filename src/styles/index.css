@@ -12,6 +12,7 @@
   --color-background: #F5F0EA;
   --color-foreground: #2D2A24;
   --color-primary: #4A4540;
+<<<<<<< HEAD
   --color-accent: #8B7A68;
   --color-muted: #E8E0D6;
   --color-border: #D4C8BB;
@@ -28,6 +29,16 @@ html.dark {
   --color-border: #3D3630;
   --color-glass-tint: rgba(30, 26, 22, 0.55);
   --color-glass-edge: rgba(255, 255, 255, 0.18);
+=======
+  --color-accent: #9A8B7A;
+  --color-muted: #EDE9E4;
+  --color-border: #D9D2CB;
+  --color-card: #FFFFFF;
+  --color-muted-foreground: #6B6560;
+
+  --animate-marquee-left: marquee-left 20s linear infinite;
+  --animate-marquee-right: marquee-right 20s linear infinite;
+>>>>>>> feature/technologies
 }
 
 ::selection {
@@ -89,6 +100,7 @@ html.dark body {
   }
 }
 
+<<<<<<< HEAD
 [data-animate] {
   will-change: transform, opacity;
 }
@@ -112,5 +124,22 @@ html.dark body {
       0 14px 36px rgb(45 42 36 / 0.12),
       0 4px 12px rgb(45 42 36 / 0.06),
       inset 0 1px 0 rgb(255 255 255 / 0.8);
+=======
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+>>>>>>> feature/technologies
   }
 }
