@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-import type { ReactNode, RefObject } from 'react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { cn } from '../lib/cn';
-=======
 import { useEffect, useRef, type ReactNode } from 'react';
 import { animate } from 'animejs';
->>>>>>> feature/technologies
 
 interface AnimatedSectionProps {
   children: ReactNode;
@@ -19,15 +13,6 @@ export const AnimatedSection = ({
   children,
   className,
   as: Tag = 'section',
-<<<<<<< HEAD
-  staggerDelay = 100,
-  delay = 0,
-}: AnimatedSectionProps) => {
-  const ref = useScrollAnimation<HTMLElement>({ staggerDelay, delay });
-
-  return (
-    <Tag ref={ref as RefObject<HTMLDivElement & HTMLElement>} className={cn(className)}>
-=======
 }: AnimatedSectionProps) => {
   const ref = useRef<HTMLElement>(null);
 
@@ -68,7 +53,6 @@ export const AnimatedSection = ({
 
   return (
     <Tag ref={ref as never} className={className} data-animate style={{ opacity: 0 }}>
->>>>>>> feature/technologies
       {children}
     </Tag>
   );
