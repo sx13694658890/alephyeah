@@ -3,6 +3,7 @@ import { animate, stagger } from 'animejs';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
+import { SkillSection } from '../components/skill/SkillSection';
 
 const featuredProjects = [
   {
@@ -62,6 +63,10 @@ export const Home = () => {
             powers my projects. Everything here is built with care and a touch of curiosity.
           </p>
         </div>
+      </AnimatedSection>
+
+      <AnimatedSection className="mb-24">
+        <SkillSection />
       </AnimatedSection>
 
       <AnimatedSection className="mb-16">
