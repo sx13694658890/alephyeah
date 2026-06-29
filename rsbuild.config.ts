@@ -21,6 +21,18 @@ export default async () =>
           index: './src/index.tsx',
         },
       },
+      tools: {
+        rspack: {
+          module: {
+            rules: [
+              {
+                test: /\.md$/,
+                type: 'asset/source',
+              },
+            ],
+          },
+        },
+      },
       html: {
         tags: [
           {

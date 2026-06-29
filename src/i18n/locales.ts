@@ -46,6 +46,10 @@ export const messages = {
     projects: {
       title: 'Projects',
       subtitle: "Things I've built, contributed to, or spent too much time thinking about.",
+      loading: 'Loading projects…',
+      error: 'Failed to load projects. Please try again.',
+      retry: 'Retry',
+      noDescription: 'No description yet.',
     },
     documents: {
       title: 'Documents',
@@ -116,6 +120,10 @@ export const messages = {
     projects: {
       title: '项目',
       subtitle: '我做过、参与过，或反复琢磨过的事情。',
+      loading: '加载项目中…',
+      error: '项目列表加载失败，请重试。',
+      retry: '重试',
+      noDescription: '暂无描述。',
     },
     documents: {
       title: '文档',

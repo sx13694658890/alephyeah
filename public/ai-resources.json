@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "resources": [
+    {
+      "id": "device-adaptation",
+      "title": "device-adaptation",
+      "description": "前端跨设备适配：响应式布局、流体字体、触摸目标与安全区域。",
+      "category": "skills",
+      "path": "/skills/device-adaptation/SKILL.md"
+    },
+    {
+      "id": "hight-page-generate",
+      "title": "hight-page-generate",
+      "description": "指导 AI 生成高级质感页面：设计系统与四层质量模型。",
+      "category": "skills",
+      "path": "/skills/hight-page-generate/SKILL.md"
+    },
+    {
+      "id": "frontend-design",
+      "title": "frontend-design",
+      "description": "打造有辨识度的生产级前端界面，避免模板化 AI 审美。",
+      "category": "skills",
+      "path": "/skills/frontend-design/SKILL.md"
+    }
+  ]
+}

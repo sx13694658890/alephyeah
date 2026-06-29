@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { animate } from 'animejs';
+import { animate, stagger } from 'animejs';
 
 interface AnimatedSectionProps {
   children: ReactNode;
@@ -13,6 +13,8 @@ export const AnimatedSection = ({
   children,
   className,
   as: Tag = 'section',
+  staggerDelay = 90,
+  delay = 0,
 }: AnimatedSectionProps) => {
   const ref = useRef<HTMLElement>(null);
 
@@ -20,8 +22,16 @@ export const AnimatedSection = ({
     const el = ref.current;
     if (!el) return;
 
+    const reveal = (nodes: HTMLElement[]) => {
+      nodes.forEach((node) => {
+        node.style.opacity = '1';
+        node.style.removeProperty('transform');
+      });
+    };
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.style.opacity = '1';
+      const targets = el.querySelectorAll('[data-animate]');
+      reveal(Array.from(targets) as HTMLElement[]);
       return;
     }
 
@@ -30,29 +40,33 @@ export const AnimatedSection = ({
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
 
-          animate(el, {
+          const targets = el.querySelectorAll('[data-animate]');
+          const animationTargets = targets.length
+            ? (Array.from(targets) as HTMLElement[])
+            : [el];
+
+          animate(animationTargets, {
             opacity: [0, 1],
             translateY: [40, 0],
+            scale: [0.97, 1],
             ease: 'outCubic',
             duration: 800,
-            onComplete: () => {
-              el.style.removeProperty('opacity');
-              el.style.removeProperty('transform');
-            },
+            delay: targets.length ? stagger(staggerDelay, { start: delay }) : delay,
+            onComplete: () => reveal(animationTargets),
           });
 
           observer.unobserve(el);
         });
       },
-      { threshold: 0.12 },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [staggerDelay, delay]);
 
   return (
-    <Tag ref={ref as never} className={className} data-animate style={{ opacity: 0 }}>
+    <Tag ref={ref as never} className={className}>
       {children}
     </Tag>
   );

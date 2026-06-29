@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { AiHubCard } from '../components/ai/AiHubCard';
+import { AiResourceModal } from '../components/ai/AiResourceModal';
+import { AnimatedSection } from '../components/AnimatedSection';
+import type { AiResourceView } from '../data/ai-resources';
 import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
@@ -67,7 +72,7 @@ const DocumentCard = ({
         opacity: 0,
         transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease, border-color 0.5s ease',
       }}
-      className="group cursor-pointer rounded-xl border border-border bg-white/50 p-5 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/20 hover:shadow-lg"
+      className="group cursor-pointer rounded-xl border border-border bg-white/50 p-5 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/20 hover:shadow-lg dark:bg-white/8"
     >
       <div className="mb-1 flex items-center gap-3">
         <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent transition-colors duration-300 group-hover:bg-accent/15">
@@ -87,6 +92,13 @@ export const Documents = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 90 });
   const listRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 80, delay: 100 });
   const { t } = usePreferences();
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiView, setAiView] = useState<AiResourceView>('skills');
+
+  const openAiHub = (view: AiResourceView) => {
+    setAiView(view);
+    setAiOpen(true);
+  };
 
   return (
     <>
@@ -99,11 +111,17 @@ export const Documents = () => {
         </p>
       </div>
 
+      <AnimatedSection className="mb-10" staggerDelay={110}>
+        <AiHubCard onOpen={openAiHub} />
+      </AnimatedSection>
+
       <div ref={listRef} className="space-y-4">
         {documents.map((doc) => (
           <DocumentCard key={doc.title} {...doc} />
         ))}
       </div>
+
+      <AiResourceModal open={aiOpen} onClose={() => setAiOpen(false)} view={aiView} />
     </>
   );
 };
