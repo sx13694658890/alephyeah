@@ -573,6 +573,7 @@ export function launchComet(
   shell: ShellRecipe,
   quality: number,
   audio?: FireworksAudioHooks,
+  playLift = true,
 ) {
   const hpad = 60;
   const vpad = 50;
@@ -615,7 +616,7 @@ export function launchComet(
   }
 
   comets.push({ star, shell, burstY });
-  audio?.onLift?.();
+  if (playLift) audio?.onLift?.();
 }
 
 export function burstShell(
@@ -1085,9 +1086,9 @@ export function seqTwoRandom(
   const s2 = getRandomShellSize(config.shellSize);
   const shell1 = resolveShell(config.shellType, s1.size);
   const shell2 = resolveShell(config.shellType, s2.size);
-  launchComet(comets, width, height, s1.x - 0.08, s1.height, shell1, config.quality, audio);
+  launchComet(comets, width, height, s1.x - 0.08, s1.height, shell1, config.quality, audio, true);
   schedule(() => {
-    launchComet(comets, width, height, s2.x + 0.08, s2.height, shell2, config.quality, audio);
+    launchComet(comets, width, height, s2.x + 0.08, s2.height, shell2, config.quality, audio, false);
   }, 100);
   const extraDelay = Math.max(shell1.extraDelay ?? shell1.starLife, shell2.extraDelay ?? shell2.starLife);
   return 900 + Math.random() * 600 + extraDelay;
@@ -1103,12 +1104,12 @@ export function seqTriple(
 ): number {
   const base = config.shellSize;
   const small = Math.max(0.5, base - 1.25);
-  launchComet(comets, width, height, 0.5, 0.7, resolveShell(config.shellType, base), config.quality, audio);
+  launchComet(comets, width, height, 0.5, 0.7, resolveShell(config.shellType, base), config.quality, audio, true);
   schedule(() => {
-    launchComet(comets, width, height, 0.2, 0.1, resolveShell(config.shellType, small), config.quality, audio);
+    launchComet(comets, width, height, 0.2, 0.1, resolveShell(config.shellType, small), config.quality, audio, false);
   }, 900 + Math.random() * 300);
   schedule(() => {
-    launchComet(comets, width, height, 0.8, 0.1, resolveShell(config.shellType, small), config.quality, audio);
+    launchComet(comets, width, height, 0.8, 0.1, resolveShell(config.shellType, small), config.quality, audio, false);
   }, 1400 + Math.random() * 400);
   return 4000;
 }
@@ -1148,6 +1149,45 @@ function barrageHeight(x: number) {
   return (Math.cos(x * 5 * Math.PI + Math.PI / 2) + 1) / 2;
 }
 
+/** 从左到右均匀分布 + 段内随机抖动，保证全宽覆盖 */
+function spreadPositions(count: number, margin = 0.04): number[] {
+  const positions: number[] = [];
+  const span = 1 - margin * 2;
+  for (let i = 0; i < count; i += 1) {
+    const segment = span / count;
+    positions.push(margin + segment * i + Math.random() * segment);
+  }
+  return positions;
+}
+
+export function seqWideRandom(
+  comets: Comet[],
+  width: number,
+  height: number,
+  config: FireworksConfig,
+  schedule: (fn: () => void, ms: number) => void,
+  audio?: FireworksAudioHooks,
+): number {
+  const isDesktop = width >= 640;
+  const count = isDesktop ? 10 + Math.floor(Math.random() * 5) : 6 + Math.floor(Math.random() * 3);
+  const positions = spreadPositions(count);
+  const shellSize = Math.max(0.5, config.shellSize - 1.2 + Math.random() * 0.8);
+
+  positions.forEach((x, i) => {
+    const delay = i === 0 ? 0 : Math.floor(i * 28 + Math.random() * 40);
+    schedule(() => {
+      const shell =
+        config.shellType === 'random'
+          ? pickShell(shellSize)
+          : resolveShell(config.shellType, shellSize);
+      const launchHeight = 0.18 + Math.random() * 0.58;
+      launchComet(comets, width, height, x, launchHeight, shell, config.quality, audio, i === 0);
+    }, delay);
+  });
+
+  return 2600 + count * 160;
+}
+
 export function seqPyramid(
   comets: Comet[],
   width: number,
@@ -1161,25 +1201,31 @@ export function seqPyramid(
   const largeSize = config.shellSize;
   const smallSize = Math.max(0.5, largeSize - 3);
 
-  const launchShell = (x: number, useSpecial: boolean) => {
+  const launchShell = (x: number, useSpecial: boolean, playLift: boolean) => {
     const shell = resolveSequenceShell(config, useSpecial ? largeSize : smallSize, useSpecial);
     const launchHeight = useSpecial ? 0.75 : pyramidHeight(x) * 0.42;
-    launchComet(comets, width, height, x, launchHeight, shell, config.quality, audio);
+    launchComet(comets, width, height, x, launchHeight, shell, config.quality, audio, playLift);
   };
 
   let count = 0;
   let delay = 0;
+  let liftUsed = false;
+  const wantLift = () => {
+    if (liftUsed) return false;
+    liftUsed = true;
+    return true;
+  };
   while (count <= barrageCountHalf) {
     if (count === barrageCountHalf) {
-      schedule(() => launchShell(0.5, true), delay);
+      schedule(() => launchShell(0.5, true, wantLift()), delay);
     } else {
       const offset = (count / barrageCountHalf) * 0.5;
-      const delayOffset = Math.random() * 30 + 30;
-      schedule(() => launchShell(offset, false), delay);
-      schedule(() => launchShell(1 - offset, false), delay + delayOffset);
+      const delayOffset = Math.random() * 24 + 18;
+      schedule(() => launchShell(offset, false, wantLift()), delay);
+      schedule(() => launchShell(1 - offset, false, wantLift()), delay + delayOffset);
     }
     count += 1;
-    delay += 200;
+    delay += 110;
   }
 
   return 3400 + barrageCountHalf * 250;
@@ -1201,37 +1247,43 @@ export function seqSmallBarrage(
   const specialIndex = isDesktop ? 3 : 1;
   const shellSize = Math.max(0.5, config.shellSize - 2);
 
-  const launchShell = (x: number, useSpecial: boolean) => {
+  const launchShell = (x: number, useSpecial: boolean, playLift: boolean) => {
     let shell: ShellRecipe;
     if (config.shellType === 'random') {
       shell = useSpecial ? randomFastShell(shellSize) : randomMainShell(shellSize);
     } else {
       shell = resolveShell(config.shellType, shellSize);
     }
-    launchComet(comets, width, height, x, barrageHeight(x) * 0.75, shell, config.quality, audio);
+    launchComet(comets, width, height, x, barrageHeight(x) * 0.75, shell, config.quality, audio, playLift);
   };
 
   let count = 0;
   let delay = 0;
+  let liftUsed = false;
+  const wantLift = () => {
+    if (liftUsed) return false;
+    liftUsed = true;
+    return true;
+  };
   while (count < barrageCount) {
     if (count === 0) {
-      launchShell(0.5, false);
+      launchShell(0.5, false, wantLift());
       count += 1;
     } else {
       const offset = ((count + 1) / barrageCount) / 2;
-      const delayOffset = Math.random() * 30 + 30;
+      const delayOffset = Math.random() * 24 + 18;
       const useSpecial = count === specialIndex;
-      schedule(() => launchShell(0.5 + offset, useSpecial), delay);
-      schedule(() => launchShell(0.5 - offset, useSpecial), delay + delayOffset);
+      schedule(() => launchShell(0.5 + offset, useSpecial, wantLift()), delay);
+      schedule(() => launchShell(0.5 - offset, useSpecial, wantLift()), delay + delayOffset);
       count += 2;
     }
-    delay += 200;
+    delay += 110;
   }
 
   return 3400 + barrageCount * 120;
 }
 
-const SMALL_BARRAGE_COOLDOWN = 15000;
+const SMALL_BARRAGE_COOLDOWN = 12000;
 
 const FINALE_BURST_COUNT = 32;
 const SEQUENCE_GAP = 1.25;
@@ -1256,12 +1308,13 @@ export function nextAutoSequence(
   }
 
   const rand = Math.random();
-  if (rand < 0.08 && Date.now() - smallBarrageLastCalled > SMALL_BARRAGE_COOLDOWN) {
+  if (rand < 0.1 && Date.now() - smallBarrageLastCalled > SMALL_BARRAGE_COOLDOWN) {
     return seqSmallBarrage(comets, width, height, config, schedule, audio);
   }
-  if (rand < 0.1) return seqPyramid(comets, width, height, config, schedule, audio);
-  if (rand < 0.6) return autoLaunchTick(comets, width, height, config, audio);
-  if (rand < 0.8) return seqTwoRandom(comets, width, height, config, schedule, audio);
+  if (rand < 0.22) return seqWideRandom(comets, width, height, config, schedule, audio);
+  if (rand < 0.32) return seqPyramid(comets, width, height, config, schedule, audio);
+  if (rand < 0.52) return autoLaunchTick(comets, width, height, config, audio);
+  if (rand < 0.76) return seqTwoRandom(comets, width, height, config, schedule, audio);
   return seqTriple(comets, width, height, config, schedule, audio);
 }
 
