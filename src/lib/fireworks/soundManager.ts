@@ -1,12 +1,12 @@
 export interface SoundSettings {
   enabled: boolean;
-  /** 主音量倍率 0–2，默认 1.5 比参考 Demo 更响 */
+  /** 主音量倍率 0–1.5 */
   volume: number;
 }
 
 export const DEFAULT_SOUND: SoundSettings = {
   enabled: true,
-  volume: 1.5,
+  volume: 1,
 };
 
 const BASE_URL = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/';
@@ -14,11 +14,17 @@ const BASE_URL = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/';
 type SoundType = 'lift' | 'burst' | 'burstSmall' | 'crackle' | 'crackleSmall';
 
 interface SoundSource {
+  /** 参考 Demo 原始音量 */
   volume: number;
   playbackRateMin: number;
   playbackRateMax: number;
   fileNames: string[];
-  buffers?: AudioBuffer[];
+  buffers: AudioBuffer[];
+}
+
+interface PendingPlay {
+  type: SoundType;
+  scale: number;
 }
 
 function clamp(n: number, min: number, max: number) {
@@ -29,50 +35,69 @@ function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-function randomChoice<T>(items: T[]): T {
-  return items[Math.floor(Math.random() * items.length)]!;
+function randomChoice<T>(items: T[]): T | undefined {
+  if (!items.length) return undefined;
+  return items[Math.floor(Math.random() * items.length)];
 }
+
+/** 爆发类音效低通截止频率，削弱刺耳高频 */
+const TONE_FILTER_HZ: Partial<Record<SoundType, number>> = {
+  burst: 3800,
+  burstSmall: 5200,
+  crackle: 4500,
+  crackleSmall: 5600,
+};
 
 export class FireworksSoundManager {
   private ctx: AudioContext | null = null;
+  private compressor: DynamicsCompressorNode | null = null;
   private settings: SoundSettings = { ...DEFAULT_SOUND };
+
   private sources: Record<SoundType, SoundSource> = {
     lift: {
-      volume: 1.2,
+      volume: 0.85,
       playbackRateMin: 0.85,
       playbackRateMax: 0.95,
       fileNames: ['lift1.mp3', 'lift2.mp3', 'lift3.mp3'],
+      buffers: [],
     },
     burst: {
-      volume: 1.35,
-      playbackRateMin: 0.8,
-      playbackRateMax: 0.9,
+      volume: 0.72,
+      playbackRateMin: 0.78,
+      playbackRateMax: 0.88,
       fileNames: ['burst1.mp3', 'burst2.mp3'],
+      buffers: [],
     },
     burstSmall: {
-      volume: 0.45,
-      playbackRateMin: 0.8,
-      playbackRateMax: 1,
+      volume: 0.2,
+      playbackRateMin: 0.82,
+      playbackRateMax: 0.95,
       fileNames: ['burst-sm-1.mp3', 'burst-sm-2.mp3'],
+      buffers: [],
     },
     crackle: {
-      volume: 0.55,
-      playbackRateMin: 1,
+      volume: 0.16,
+      playbackRateMin: 0.95,
       playbackRateMax: 1,
       fileNames: ['crackle1.mp3'],
+      buffers: [],
     },
     crackleSmall: {
-      volume: 0.65,
-      playbackRateMin: 1,
+      volume: 0.22,
+      playbackRateMin: 0.95,
       playbackRateMax: 1,
       fileNames: ['crackle-sm-1.mp3'],
+      buffers: [],
     },
   };
 
   private loaded = false;
   private loading: Promise<void> | null = null;
-  private lastSmallBurst = 0;
+  private unlocked = false;
   private paused = false;
+  private pending: PendingPlay[] = [];
+  private lastSmallBurst = 0;
+  private lastBurst = 0;
 
   updateSettings(next: Partial<SoundSettings>) {
     this.settings = { ...this.settings, ...next };
@@ -82,28 +107,63 @@ export class FireworksSoundManager {
     return this.settings;
   }
 
+  isUnlocked() {
+    return this.unlocked;
+  }
+
   setPaused(paused: boolean) {
     this.paused = paused;
     if (!this.ctx) return;
     if (paused) void this.ctx.suspend();
-    else void this.ctx.resume();
+    else void this.resumeContext();
   }
 
   private ensureContext() {
     if (!this.ctx) {
-      const Ctx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      const Ctx =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (!Ctx) return null;
       this.ctx = new Ctx();
     }
     return this.ctx;
   }
 
-  async unlock() {
+  private getCompressor(ctx: AudioContext) {
+    if (!this.compressor) {
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -20;
+      comp.knee.value = 18;
+      comp.ratio.value = 3;
+      comp.attack.value = 0.004;
+      comp.release.value = 0.18;
+      comp.connect(ctx.destination);
+      this.compressor = comp;
+    }
+    return this.compressor;
+  }
+
+  private async resumeContext() {
     const ctx = this.ensureContext();
-    if (!ctx) return;
-    if (ctx.state === 'suspended') await ctx.resume();
+    if (!ctx) return false;
+    if (ctx.state === 'suspended') {
+      try {
+        await ctx.resume();
+      } catch {
+        return false;
+      }
+    }
+    return ctx.state === 'running';
+  }
+
+  async unlock() {
+    this.unlocked = true;
+    const ok = await this.resumeContext();
+    await this.preload();
     this.play('lift', 0);
-    window.setTimeout(() => void ctx.resume(), 200);
+    window.setTimeout(() => void this.resumeContext(), 250);
+    this.flushPending();
+    return ok;
   }
 
   preload() {
@@ -117,7 +177,6 @@ export class FireworksSoundManager {
       const tasks: Promise<void>[] = [];
       (Object.keys(this.sources) as SoundType[]).forEach((type) => {
         const source = this.sources[type];
-        source.buffers = [];
         source.fileNames.forEach((fileName) => {
           tasks.push(
             fetch(`${BASE_URL}${fileName}`)
@@ -125,18 +184,22 @@ export class FireworksSoundManager {
                 if (!res.ok) throw new Error(res.statusText);
                 return res.arrayBuffer();
               })
-              .then((data) => new Promise<AudioBuffer>((resolve, reject) => {
-                ctx.decodeAudioData(data, resolve, reject);
-              }))
+              .then(
+                (data) =>
+                  new Promise<AudioBuffer>((resolve, reject) => {
+                    ctx.decodeAudioData(data, resolve, reject);
+                  }),
+              )
               .then((buffer) => {
-                source.buffers!.push(buffer);
-              }),
+                source.buffers.push(buffer);
+              })
+              .catch(() => undefined),
           );
         });
       });
 
       await Promise.allSettled(tasks);
-      this.loaded = true;
+      this.loaded = sourceHasBuffers(this.sources);
     })();
 
     return this.loading;
@@ -144,33 +207,81 @@ export class FireworksSoundManager {
 
   play(type: SoundType, scale = 1) {
     if (!this.settings.enabled || this.paused) return;
-    const ctx = this.ensureContext();
-    if (!ctx || ctx.state === 'suspended') return;
+    void this.playInternal(type, scale);
+  }
+
+  private async playInternal(type: SoundType, scale: number) {
+    if (!this.unlocked) {
+      this.pending.push({ type, scale });
+      return;
+    }
+
+    await this.preload();
+    const running = await this.resumeContext();
+    if (!running) {
+      this.pending.push({ type, scale });
+      return;
+    }
 
     scale = clamp(scale, 0, 1);
     if (scale <= 0) return;
 
-    if (type === 'burstSmall') {
-      const now = Date.now();
-      if (now - this.lastSmallBurst < 20) return;
+    const now = Date.now();
+    if (type === 'burst') {
+      if (now - this.lastBurst < 90) return;
+      this.lastBurst = now;
+    }
+    if (type === 'burstSmall' || type === 'crackleSmall') {
+      if (now - this.lastSmallBurst < 32) return;
       this.lastSmallBurst = now;
     }
 
     const source = this.sources[type];
-    if (!source.buffers?.length) return;
+    if (!source.buffers.length) return;
 
-    const master = clamp(this.settings.volume, 0, 2);
-    const gainNode = ctx.createGain();
-    gainNode.gain.value = source.volume * scale * master;
-
+    const ctx = this.ctx!;
     const buffer = randomChoice(source.buffers);
+    if (!buffer) return;
+
+    const playbackRate =
+      randomBetween(source.playbackRateMin, source.playbackRateMax) * (1.65 - scale * 0.55);
+    const duration = buffer.duration / playbackRate;
+
+    const master = clamp(this.settings.volume, 0, 1.5);
+    let peakGain = source.volume * scale * master;
+    if (type === 'burst') peakGain *= 0.88;
+    peakGain = Math.min(peakGain, 0.85);
+
     const bufferSource = ctx.createBufferSource();
-    const rate = randomBetween(source.playbackRateMin, source.playbackRateMax) * (2 - scale);
-    bufferSource.playbackRate.value = rate;
+    bufferSource.playbackRate.value = playbackRate;
     bufferSource.buffer = buffer;
+
+    const gainNode = ctx.createGain();
+    const t0 = ctx.currentTime;
+    gainNode.gain.setValueAtTime(0.0001, t0);
+    gainNode.gain.exponentialRampToValueAtTime(Math.max(peakGain, 0.0001), t0 + 0.012);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + duration + 0.04);
+
+    let tail: AudioNode = gainNode;
+    const cutoff = TONE_FILTER_HZ[type];
+    if (cutoff) {
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = cutoff;
+      filter.Q.value = 0.55;
+      gainNode.connect(filter);
+      tail = filter;
+    }
+
     bufferSource.connect(gainNode);
-    gainNode.connect(ctx.destination);
+    tail.connect(this.getCompressor(ctx));
     bufferSource.start(0);
+  }
+
+  private flushPending() {
+    const queue = [...this.pending];
+    this.pending = [];
+    queue.forEach(({ type, scale }) => this.play(type, scale));
   }
 
   playLift() {
@@ -178,17 +289,21 @@ export class FireworksSoundManager {
   }
 
   playBurst(shellSpread = 300) {
-    const scale = clamp(shellSpread / 500, 0.35, 1);
+    const scale = clamp(shellSpread / 650, 0.25, 0.75);
     this.play('burst', scale);
   }
 
   playCrackle() {
-    this.play('crackle');
+    this.play('crackle', 0.65);
   }
 
   playCrackleSmall() {
-    this.play('crackleSmall');
+    this.play('crackleSmall', 0.5);
   }
+}
+
+function sourceHasBuffers(sources: Record<SoundType, SoundSource>) {
+  return (Object.keys(sources) as SoundType[]).some((key) => sources[key].buffers.length > 0);
 }
 
 export const fireworksSound = new FireworksSoundManager();

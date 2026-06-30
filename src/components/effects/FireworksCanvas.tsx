@@ -18,6 +18,7 @@ import {
   renderFireworks,
   resolveShell,
   updateParticles,
+  SEQUENCE_GAP,
 } from '../../lib/fireworks/canvasEngine';
 import { type SoundSettings, DEFAULT_SOUND, fireworksSound } from '../../lib/fireworks/soundManager';
 
@@ -105,7 +106,7 @@ export const FireworksCanvas = ({
     let dpr = 1;
     let raf = 0;
     let last = performance.now();
-    let autoTimer = 1800;
+    let autoTimer = 3200;
     let running = true;
     const pendingTimers: number[] = [];
 
@@ -192,7 +193,7 @@ export const FireworksCanvas = ({
         if (cfg.autoLaunch) {
           autoTimer -= dt * speed;
           if (autoTimer <= 0) {
-            autoTimer = nextAutoSequence(comets, stageW, stageH, cfg, schedule, audio, finaleCounter) * 1.1;
+            autoTimer = nextAutoSequence(comets, stageW, stageH, cfg, schedule, audio, finaleCounter) * SEQUENCE_GAP;
           }
         }
 
@@ -210,6 +211,7 @@ export const FireworksCanvas = ({
           cfg.scaleFactor,
           speed,
           cfg.longExposure,
+          cfg.quality,
         );
 
         const targetSky = computeSkyColor(stars, cfg.skyLighting);
@@ -224,8 +226,8 @@ export const FireworksCanvas = ({
 
     resize();
     const cfg = configRef.current;
+    void fireworksSound.unlock();
     launchComet(comets, stageW, stageH, 0.5, 0.5, resolveShell(cfg.shellType, cfg.shellSize), cfg.quality, audio);
-    launchComet(comets, stageW, stageH, 0.28, 0.62, resolveShell(cfg.shellType, cfg.shellSize), cfg.quality, audio);
 
     window.addEventListener('resize', resize);
     container.addEventListener('pointerdown', onPointerDown);

@@ -27,6 +27,8 @@ export const STAR_AIR_DRAG = 0.98;
 export const STAR_AIR_DRAG_HEAVY = 0.992;
 export const SPARK_AIR_DRAG = 0.9;
 
+export const INVISIBLE = '__INVISIBLE__';
+
 export interface FireworksConfig {
   quality: 1 | 2 | 3;
   shellSize: number;
@@ -35,27 +37,41 @@ export interface FireworksConfig {
   scaleFactor: number;
   autoLaunch: boolean;
   finaleMode: boolean;
+  hideControls: boolean;
   longExposure: boolean;
 }
 
+/** 与参考 Demo 下拉顺序一致 */
 export type ShellType =
   | 'random'
-  | 'crysanthemum'
-  | 'crossette'
   | 'crackle'
+  | 'crossette'
+  | 'crysanthemum'
+  | 'fallingLeaves'
+  | 'floral'
+  | 'ghost'
+  | 'horsetail'
+  | 'palm'
+  | 'ring'
   | 'strobe'
-  | 'willow'
-  | 'ring';
+  | 'willow';
 
 export const SHELL_TYPE_OPTIONS: ShellType[] = [
   'random',
-  'crysanthemum',
-  'crossette',
   'crackle',
+  'crossette',
+  'crysanthemum',
+  'fallingLeaves',
+  'floral',
+  'ghost',
+  'horsetail',
+  'palm',
+  'ring',
   'strobe',
   'willow',
-  'ring',
 ];
+
+export const SCALE_FACTOR_OPTIONS = [0.5, 0.62, 0.75, 0.9, 1, 1.5, 2] as const;
 
 export const DEFAULT_CONFIG: FireworksConfig = {
   quality: 2,
@@ -65,6 +81,7 @@ export const DEFAULT_CONFIG: FireworksConfig = {
   scaleFactor: 1,
   autoLaunch: true,
   finaleMode: false,
+  hideControls: false,
   longExposure: false,
 };
 
@@ -106,6 +123,11 @@ export interface Star {
   secondColor?: string;
   transitionTime: number;
   colorChanged: boolean;
+  spinRadius: number;
+  spinAngle: number;
+  spinSpeed: number;
+  strobe: boolean;
+  strobeFreq: number;
   onDeath?: (star: Star) => void;
 }
 
@@ -122,12 +144,19 @@ export interface ShellRecipe {
   starCount: number;
   color: string | [string, string];
   secondColor?: string | null;
-  glitter: '' | 'light' | 'medium' | 'willow';
+  glitter: '' | 'light' | 'medium' | 'heavy' | 'thick' | 'willow';
   glitterColor: string;
   crossette?: boolean;
   crackle?: boolean;
   ring?: boolean;
+  floral?: boolean;
+  fallingLeaves?: boolean;
+  horsetail?: boolean;
+  pistil?: boolean;
+  pistilColor?: string;
+  strobe?: boolean;
   soundScale?: number;
+  extraDelay?: number;
 }
 
 export interface SkyColor {
@@ -147,26 +176,37 @@ function whiteOrGold() {
   return Math.random() < 0.5 ? FIREWORK_COLORS.Gold : FIREWORK_COLORS.White;
 }
 
+function makePistilColor(shellColor: string) {
+  return shellColor === FIREWORK_COLORS.White || shellColor === FIREWORK_COLORS.Gold
+    ? randomColor({ notColor: shellColor })
+    : whiteOrGold();
+}
+
 export function crysanthemumShell(size: number): ShellRecipe {
-  const single = Math.random() < 0.64;
+  const single = Math.random() < 0.72;
   const color = single
     ? randomColor({ limitWhite: true })
     : ([randomColor(), randomColor()] as [string, string]);
   const primary = Array.isArray(color) ? color[0] : color;
+  const pistil = single && Math.random() < 0.42;
+  const pistilColor = pistil ? makePistilColor(primary) : undefined;
   const secondColor =
-    single && Math.random() < 0.22
-      ? randomColor({ notColor: primary, limitWhite: true })
+    single && (Math.random() < 0.2 || primary === FIREWORK_COLORS.White)
+      ? pistilColor || randomColor({ notColor: primary, limitWhite: true })
       : null;
   const spreadSize = 300 + size * 100;
   const scaled = spreadSize / 54;
+  const glitter = Math.random() < 0.28;
   return {
     spreadSize,
     starLife: 900 + size * 200,
     starLifeVariation: 0.125,
-    starCount: Math.max(6, scaled * scaled * 1.25),
+    starCount: Math.max(6, scaled * scaled * (glitter ? 1.1 : 1.25)),
     color: primary,
     secondColor,
-    glitter: Math.random() < 0.65 ? 'light' : '',
+    pistil,
+    pistilColor,
+    glitter: glitter ? 'light' : '',
     glitterColor: whiteOrGold(),
   };
 }
@@ -200,12 +240,106 @@ export function strobeShell(size: number): ShellRecipe {
     secondColor: Math.random() < 0.5 ? FIREWORK_COLORS.White : null,
     glitter: 'light',
     glitterColor: FIREWORK_COLORS.White,
+    strobe: true,
+    pistil: Math.random() < 0.5,
+    pistilColor: makePistilColor(color),
   };
 }
 
 export function crossetteShell(size: number): ShellRecipe {
+  const color = randomColor({ limitWhite: true });
+  const spreadSize = 300 + size * 100;
+  const scaled = spreadSize / 54;
+  return {
+    spreadSize,
+    starLife: 750 + size * 160,
+    starLifeVariation: 0.4,
+    starCount: Math.max(6, scaled * scaled * 0.85),
+    color,
+    crossette: true,
+    glitter: '',
+    glitterColor: FIREWORK_COLORS.White,
+  };
+}
+
+export function floralShell(size: number): ShellRecipe {
+  const spreadSize = 300 + size * 120;
+  const scaled = spreadSize / 54;
+  const dual = Math.random() < 0.35;
+  return {
+    spreadSize,
+    starLife: 500 + size * 50,
+    starLifeVariation: 0.5,
+    starCount: Math.max(6, scaled * scaled * 0.12),
+    color: dual ? ([randomColor(), randomColor()] as [string, string]) : randomColor(),
+    floral: true,
+    glitter: '',
+    glitterColor: FIREWORK_COLORS.White,
+    extraDelay: 800,
+  };
+}
+
+export function fallingLeavesShell(size: number): ShellRecipe {
+  const spreadSize = 300 + size * 120;
+  const scaled = spreadSize / 54;
+  return {
+    spreadSize,
+    starLife: 500 + size * 50,
+    starLifeVariation: 0.5,
+    starCount: Math.max(6, scaled * scaled * 0.12),
+    color: INVISIBLE,
+    secondColor: FIREWORK_COLORS.Gold,
+    glitter: 'medium',
+    glitterColor: FIREWORK_COLORS.Gold,
+    fallingLeaves: true,
+    extraDelay: 4600,
+  };
+}
+
+export function ghostShell(size: number): ShellRecipe {
+  const ghostColor = randomColor({ notColor: FIREWORK_COLORS.White });
   const base = crysanthemumShell(size);
-  return { ...base, crossette: true, starCount: base.starCount * 0.85 };
+  return {
+    ...base,
+    starLife: base.starLife * 1.5,
+    color: INVISIBLE,
+    secondColor: ghostColor,
+    glitter: '',
+    extraDelay: 400,
+  };
+}
+
+export function horsetailShell(size: number): ShellRecipe {
+  const color = randomColor();
+  const spreadSize = 250 + size * 38;
+  const scaled = spreadSize / 54;
+  return {
+    spreadSize,
+    starLife: 2500 + size * 300,
+    starLifeVariation: 0.2,
+    starCount: Math.max(6, scaled * scaled * 0.9),
+    color,
+    horsetail: true,
+    glitter: 'medium',
+    glitterColor: Math.random() < 0.5 ? whiteOrGold() : color,
+    strobe: color === FIREWORK_COLORS.White,
+  };
+}
+
+export function palmShell(size: number): ShellRecipe {
+  const color = randomColor();
+  const thick = Math.random() < 0.5;
+  const spreadSize = 250 + size * 75;
+  const scaled = spreadSize / 54;
+  return {
+    spreadSize,
+    starLife: 1800 + size * 200,
+    starLifeVariation: 0.2,
+    starCount: Math.max(6, scaled * scaled * (thick ? 0.15 : 0.4)),
+    color,
+    glitter: thick ? 'thick' : 'heavy',
+    glitterColor: FIREWORK_COLORS.Gold,
+  };
 }
 
 export function willowShell(size: number): ShellRecipe {
@@ -213,13 +347,14 @@ export function willowShell(size: number): ShellRecipe {
   const scaled = spreadSize / 54;
   return {
     spreadSize,
-    starLife: 3000 + size * 300,
-    starLifeVariation: 0.2,
-    starCount: Math.max(6, scaled * scaled * 0.6),
+    starLife: 3200 + size * 320,
+    starLifeVariation: 0.18,
+    starCount: Math.max(6, scaled * scaled * 0.75),
     color: FIREWORK_COLORS.Gold,
     glitter: 'willow',
     glitterColor: FIREWORK_COLORS.Gold,
     soundScale: 0.7,
+    extraDelay: 800,
   };
 }
 
@@ -243,12 +378,22 @@ export function ringShell(size: number): ShellRecipe {
 export function resolveShell(type: ShellType, size: number): ShellRecipe {
   if (type === 'random') return pickShell(size);
   switch (type) {
-    case 'crysanthemum':
-      return crysanthemumShell(size);
-    case 'crossette':
-      return crossetteShell(size);
     case 'crackle':
       return crackleShell(size);
+    case 'crossette':
+      return crossetteShell(size);
+    case 'crysanthemum':
+      return crysanthemumShell(size);
+    case 'fallingLeaves':
+      return fallingLeavesShell(size);
+    case 'floral':
+      return floralShell(size);
+    case 'ghost':
+      return ghostShell(size);
+    case 'horsetail':
+      return horsetailShell(size);
+    case 'palm':
+      return palmShell(size);
     case 'strobe':
       return strobeShell(size);
     case 'willow':
@@ -296,6 +441,7 @@ function makeStar(
   speedOffY = 0,
   heavy = false,
 ): Star {
+  const invisible = color === INVISIBLE;
   return {
     x,
     y,
@@ -307,7 +453,7 @@ function makeStar(
     fullLife: life,
     color,
     heavy,
-    visible: true,
+    visible: !invisible,
     sparkFreq: 0,
     sparkSpeed: 1,
     sparkLife: 750,
@@ -316,6 +462,11 @@ function makeStar(
     sparkTimer: 0,
     transitionTime: 0,
     colorChanged: false,
+    spinRadius: 0,
+    spinAngle: Math.random() * PI2,
+    spinSpeed: 0.8,
+    strobe: false,
+    strobeFreq: 0,
   };
 }
 
@@ -332,7 +483,12 @@ function spawnSpark(sparks: Spark[], x: number, y: number, color: string, angle:
   });
 }
 
-function applyGlitter(star: Star, level: '' | 'light' | 'medium' | 'willow', glitterColor: string, quality: number) {
+function applyGlitter(
+  star: Star,
+  level: '' | 'light' | 'medium' | 'heavy' | 'thick' | 'willow',
+  glitterColor: string,
+  quality: number,
+) {
   if (!level) return;
   if (level === 'light') {
     star.sparkFreq = 400 / quality;
@@ -344,14 +500,37 @@ function applyGlitter(star: Star, level: '' | 'light' | 'medium' | 'willow', gli
     star.sparkSpeed = 0.44;
     star.sparkLife = 700;
     star.sparkLifeVariation = 2;
+  } else if (level === 'heavy') {
+    star.sparkFreq = 80 / quality;
+    star.sparkSpeed = 0.8;
+    star.sparkLife = 1400;
+    star.sparkLifeVariation = 2;
+  } else if (level === 'thick') {
+    star.sparkFreq = 16 / quality;
+    star.sparkSpeed = quality >= 3 ? 1.65 : 1.5;
+    star.sparkLife = 1400;
+    star.sparkLifeVariation = 3;
   } else {
     star.sparkFreq = 120 / quality;
     star.sparkSpeed = 0.34;
-    star.sparkLife = 1400;
+    star.sparkLife = 1600;
     star.sparkLifeVariation = 3.8;
   }
   star.sparkColor = glitterColor;
   star.sparkTimer = Math.random() * star.sparkFreq;
+}
+
+function cometSparkFreq(quality: number, shell: ShellRecipe) {
+  if (shell.glitter === 'willow' || shell.fallingLeaves) return 20 / quality;
+  if (quality >= 3) return 8;
+  if (quality >= 2) return 16;
+  return 32 / quality;
+}
+
+function floralEffect(stars: Star[], star: Star) {
+  createBurst(12, (angle, speedMult) => {
+    stars.push(makeStar(star.x, star.y, star.color === INVISIBLE ? FIREWORK_COLORS.White : star.color, angle, speedMult * 2.4, 1000));
+  });
 }
 
 function crossetteEffect(stars: Star[], star: Star) {
@@ -402,16 +581,38 @@ export function launchComet(
   const launchY = height;
   const burstY = minHeight - launchHeight * (minHeight - vpad);
   const launchDistance = launchY - burstY;
-  const launchVelocity = Math.pow(launchDistance * 0.04, 0.64);
-  const cometColor = typeof shell.color === 'string' ? shell.color : shell.color[0];
+  const launchVelocity = Math.pow(launchDistance * 0.04, 0.64) * (shell.horsetail ? 1.2 : 1);
+  const cometColor =
+    shell.color === INVISIBLE
+      ? FIREWORK_COLORS.White
+      : typeof shell.color === 'string'
+        ? shell.color
+        : shell.color[0];
 
-  const star = makeStar(launchX, launchY, cometColor, Math.PI, launchVelocity, launchVelocity * 400, 0, 0, true);
-  star.sparkFreq = Math.max(8, 32 / quality);
-  star.sparkSpeed = 0.6;
-  star.sparkLife = 320;
+  const star = makeStar(
+    launchX,
+    launchY,
+    cometColor,
+    Math.PI,
+    launchVelocity,
+    launchVelocity * (shell.horsetail ? 100 : 400),
+    0,
+    0,
+    true,
+  );
+  star.sparkFreq = cometSparkFreq(quality, shell);
+  star.sparkSpeed = shell.horsetail || shell.glitter === 'willow' ? 0.5 : 0.55;
+  star.sparkLife = shell.horsetail || shell.glitter === 'willow' ? 520 : 360;
   star.sparkLifeVariation = 3;
-  star.sparkColor = cometColor;
+  star.sparkColor = shell.color === INVISIBLE ? FIREWORK_COLORS.Gold : cometColor;
   star.sparkTimer = Math.random() * star.sparkFreq;
+  star.spinRadius = 0.32 + Math.random() * 0.53;
+  star.spinSpeed = 0.65 + Math.random() * 0.35;
+
+  if (Math.random() > 0.4 && !shell.horsetail) {
+    star.secondColor = INVISIBLE;
+    star.transitionTime = Math.pow(Math.random(), 1.5) * 700 + 500;
+  }
 
   comets.push({ star, shell, burstY });
   audio?.onLift?.();
@@ -426,18 +627,27 @@ export function burstShell(
   shell: ShellRecipe,
   quality: number,
   audio?: FireworksAudioHooks,
+  cometVel?: { x: number; y: number },
 ) {
   const speed = shell.spreadSize / 96;
   const standardInitialSpeed = shell.spreadSize / 1800;
   const primary = typeof shell.color === 'string' ? shell.color : shell.color[0];
+  const burstOffX = shell.horsetail && cometVel ? cometVel.x : 0;
+  const burstOffY = shell.horsetail && cometVel ? cometVel.y : -standardInitialSpeed;
 
   const starFactory = (angle: number, speedMult: number, ringSpeed = speedMult * speed) => {
     const life = shell.starLife + Math.random() * shell.starLife * shell.starLifeVariation;
-    const star = makeStar(x, y, primary, angle, ringSpeed, life, 0, -standardInitialSpeed);
+    const star = makeStar(x, y, primary, angle, ringSpeed, life, burstOffX, burstOffY);
 
     if (shell.secondColor) {
       star.transitionTime = life * (Math.random() * 0.05 + 0.32);
       star.secondColor = shell.secondColor;
+    }
+
+    if (shell.strobe) {
+      star.transitionTime = life * (Math.random() * 0.08 + 0.46);
+      star.strobe = true;
+      star.strobeFreq = Math.random() * 20 + 40;
     }
 
     applyGlitter(star, shell.glitter, shell.glitterColor, quality);
@@ -452,17 +662,35 @@ export function burstShell(
         audio?.onCrackle?.();
         crackleEffect(sparks, s);
       };
+    } else if (shell.floral) {
+      star.onDeath = (s) => {
+        audio?.onCrackleSmall?.();
+        floralEffect(stars, s);
+      };
     }
 
     stars.push(star);
   };
 
   if (shell.ring) {
+    const ringStart = Math.random() * PI2;
+    const ringSquash = Math.pow(Math.random(), 2) * 0.85 + 0.15;
     const ringCount = shell.starCount;
     const angleInc = PI2 / ringCount;
     for (let i = 0; i < ringCount; i += 1) {
       const angle = angleInc * i + Math.random() * angleInc * 0.25;
-      starFactory(angle, 1, speed * (0.92 + Math.random() * 0.08));
+      const sx = Math.sin(angle) * speed * ringSquash;
+      const sy = Math.cos(angle) * speed;
+      const mag = Math.hypot(sx, sy);
+      const rot = Math.atan2(sx, sy) + ringStart;
+      const life = shell.starLife + Math.random() * shell.starLife * shell.starLifeVariation;
+      const star = makeStar(x, y, primary, rot, mag, life, 0, -standardInitialSpeed);
+      if (shell.secondColor) {
+        star.transitionTime = life * (Math.random() * 0.05 + 0.32);
+        star.secondColor = shell.secondColor;
+      }
+      applyGlitter(star, shell.glitter, shell.glitterColor, quality);
+      stars.push(star);
     }
   } else {
     createBurst(shell.starCount, (angle, speedMult) => {
@@ -478,7 +706,16 @@ export function burstShell(
     });
   }
 
-  flashes.push({ x, y, radius: 36 + shell.spreadSize / 18 });
+  if (shell.pistil && shell.pistilColor) {
+    createBurst(Math.max(8, Math.floor(shell.starCount * 0.12)), (angle, speedMult) => {
+      const life = shell.starLife * 0.55;
+      stars.push(
+        makeStar(x, y, shell.pistilColor!, angle, speedMult * speed * 0.38, life, 0, -standardInitialSpeed * 0.45),
+      );
+    });
+  }
+
+  flashes.push({ x, y, radius: 40 + shell.spreadSize / 16 });
   audio?.onBurst?.(shell);
 }
 
@@ -512,10 +749,28 @@ export function updateParticles(
     star.speedY *= starDragHeavy;
     star.speedY += gAcc;
 
+    if (star.spinRadius) {
+      star.spinAngle += star.spinSpeed * speed;
+      star.x += Math.sin(star.spinAngle) * star.spinRadius * speed;
+      star.y += Math.cos(star.spinAngle) * star.spinRadius * speed;
+    }
+
     emitStarSparks(star, sparks, timeStep, speed, quality);
 
+    if (star.life < star.transitionTime && star.secondColor && !star.colorChanged) {
+      star.colorChanged = true;
+      star.color = star.secondColor;
+      star.visible = star.secondColor !== INVISIBLE;
+      if (star.secondColor === INVISIBLE) {
+        star.sparkFreq = 0;
+      }
+    }
+
     if (star.y <= comet.burstY || star.life <= 0) {
-      burstShell(stars, sparks, flashes, star.x, star.y, comet.shell, quality, audio);
+      burstShell(stars, sparks, flashes, star.x, star.y, comet.shell, quality, audio, {
+        x: star.speedX,
+        y: star.speedY,
+      });
       comets.splice(i, 1);
     }
   }
@@ -546,11 +801,26 @@ export function updateParticles(
     }
     star.speedY += gAcc;
 
+    if (star.spinRadius) {
+      star.spinAngle += star.spinSpeed * speed;
+      star.x += Math.sin(star.spinAngle) * star.spinRadius * speed;
+      star.y += Math.cos(star.spinAngle) * star.spinRadius * speed;
+    }
+
     emitStarSparks(star, sparks, timeStep, speed, quality, burnRate, burnRateInverse);
 
-    if (star.life < star.transitionTime && star.secondColor && !star.colorChanged) {
-      star.colorChanged = true;
-      star.color = star.secondColor;
+    if (star.life < star.transitionTime) {
+      if (star.secondColor && !star.colorChanged) {
+        star.colorChanged = true;
+        star.color = star.secondColor;
+        star.visible = star.secondColor !== INVISIBLE;
+        if (star.secondColor === INVISIBLE) {
+          star.sparkFreq = 0;
+        }
+      }
+      if (star.strobe) {
+        star.visible = Math.floor(star.life / star.strobeFreq) % 3 === 0;
+      }
     }
 
     if (star.y > height + 60 || star.x < -60 || star.x > width + 60) {
@@ -612,7 +882,7 @@ export function computeSkyColor(stars: Star[], skyLighting: number): SkyColor {
 
   for (const star of stars) {
     const tuple = COLOR_TUPLES[star.color];
-    if (!tuple) continue;
+    if (!tuple || star.color === INVISIBLE) continue;
     total += 1;
     r += tuple.r;
     g += tuple.g;
@@ -650,6 +920,7 @@ export function renderFireworks(
   scaleFactor: number,
   simSpeed: number,
   longExposure: boolean,
+  quality: number = 2,
 ) {
   const scale = dpr * scaleFactor;
   trailsCtx.setTransform(scale, 0, 0, scale, 0, 0);
@@ -673,9 +944,13 @@ export function renderFireworks(
   }
 
   trailsCtx.globalCompositeOperation = 'lighten';
-  trailsCtx.lineCap = 'round';
+  trailsCtx.lineCap = quality <= 1 ? 'square' : 'round';
 
-  const starGroups = groupByColor([...comets.map((c) => c.star), ...stars.filter((s) => s.visible)]);
+  const visibleStars = [
+    ...comets.map((c) => c.star).filter((s) => s.visible && s.color !== INVISIBLE),
+    ...stars.filter((s) => s.visible && s.color !== INVISIBLE),
+  ];
+  const starGroups = groupByColor(visibleStars);
   for (const [color, group] of starGroups) {
     trailsCtx.strokeStyle = color;
     trailsCtx.lineWidth = STAR_DRAW_WIDTH;
@@ -690,7 +965,7 @@ export function renderFireworks(
   const sparkGroups = groupSparksByColor(sparks);
   for (const [color, group] of sparkGroups) {
     trailsCtx.strokeStyle = color;
-    trailsCtx.lineWidth = SPARK_DRAW_WIDTH;
+    trailsCtx.lineWidth = quality >= 3 ? 0.75 : SPARK_DRAW_WIDTH;
     trailsCtx.lineCap = 'butt';
     trailsCtx.beginPath();
     for (const spark of group) {
@@ -705,6 +980,7 @@ export function renderFireworks(
   mainCtx.lineWidth = 1;
   mainCtx.beginPath();
   for (const comet of comets) {
+    if (!comet.star.visible) continue;
     mainCtx.moveTo(comet.star.x, comet.star.y);
     mainCtx.lineTo(comet.star.x - comet.star.speedX * 1.6, comet.star.y - comet.star.speedY * 1.6);
   }
@@ -780,6 +1056,10 @@ export function launchAtPointer(
   );
 }
 
+function sequenceDelay(shell: ShellRecipe) {
+  return 900 + Math.random() * 600 + (shell.extraDelay ?? shell.starLife);
+}
+
 export function autoLaunchTick(
   comets: Comet[],
   width: number,
@@ -790,7 +1070,7 @@ export function autoLaunchTick(
   const { size, x, height: h } = getRandomShellSize(config.shellSize);
   const shell = resolveShell(config.shellType, size);
   launchComet(comets, width, height, x, h, shell, config.quality, audio);
-  return 900 + Math.random() * 600 + shell.starLife;
+  return sequenceDelay(shell);
 }
 
 export function seqTwoRandom(
@@ -803,11 +1083,14 @@ export function seqTwoRandom(
 ): number {
   const s1 = getRandomShellSize(config.shellSize);
   const s2 = getRandomShellSize(config.shellSize);
-  launchComet(comets, width, height, s1.x - 0.08, s1.height, resolveShell(config.shellType, s1.size), config.quality, audio);
+  const shell1 = resolveShell(config.shellType, s1.size);
+  const shell2 = resolveShell(config.shellType, s2.size);
+  launchComet(comets, width, height, s1.x - 0.08, s1.height, shell1, config.quality, audio);
   schedule(() => {
-    launchComet(comets, width, height, s2.x + 0.08, s2.height, resolveShell(config.shellType, s2.size), config.quality, audio);
+    launchComet(comets, width, height, s2.x + 0.08, s2.height, shell2, config.quality, audio);
   }, 100);
-  return 1200 + Math.random() * 800;
+  const extraDelay = Math.max(shell1.extraDelay ?? shell1.starLife, shell2.extraDelay ?? shell2.starLife);
+  return 900 + Math.random() * 600 + extraDelay;
 }
 
 export function seqTriple(
@@ -830,7 +1113,128 @@ export function seqTriple(
   return 4000;
 }
 
+const FAST_SHELL_TYPES: ShellType[] = [
+  'crackle',
+  'crossette',
+  'crysanthemum',
+  'ghost',
+  'horsetail',
+  'palm',
+  'ring',
+  'strobe',
+];
+
+function randomMainShell(size: number): ShellRecipe {
+  return Math.random() < 0.78 ? crysanthemumShell(size) : ringShell(size);
+}
+
+function randomFastShell(size: number): ShellRecipe {
+  const type = FAST_SHELL_TYPES[Math.floor(Math.random() * FAST_SHELL_TYPES.length)]!;
+  return resolveShell(type, size);
+}
+
+function resolveSequenceShell(config: FireworksConfig, size: number, special: boolean): ShellRecipe {
+  if (config.shellType === 'random') {
+    return special ? pickShell(size) : randomMainShell(size);
+  }
+  return resolveShell(config.shellType, size);
+}
+
+function pyramidHeight(x: number) {
+  return x <= 0.5 ? x / 0.5 : (1 - x) / 0.5;
+}
+
+function barrageHeight(x: number) {
+  return (Math.cos(x * 5 * Math.PI + Math.PI / 2) + 1) / 2;
+}
+
+export function seqPyramid(
+  comets: Comet[],
+  width: number,
+  height: number,
+  config: FireworksConfig,
+  schedule: (fn: () => void, ms: number) => void,
+  audio?: FireworksAudioHooks,
+): number {
+  const isDesktop = width >= 640;
+  const barrageCountHalf = isDesktop ? 7 : 4;
+  const largeSize = config.shellSize;
+  const smallSize = Math.max(0.5, largeSize - 3);
+
+  const launchShell = (x: number, useSpecial: boolean) => {
+    const shell = resolveSequenceShell(config, useSpecial ? largeSize : smallSize, useSpecial);
+    const launchHeight = useSpecial ? 0.75 : pyramidHeight(x) * 0.42;
+    launchComet(comets, width, height, x, launchHeight, shell, config.quality, audio);
+  };
+
+  let count = 0;
+  let delay = 0;
+  while (count <= barrageCountHalf) {
+    if (count === barrageCountHalf) {
+      schedule(() => launchShell(0.5, true), delay);
+    } else {
+      const offset = (count / barrageCountHalf) * 0.5;
+      const delayOffset = Math.random() * 30 + 30;
+      schedule(() => launchShell(offset, false), delay);
+      schedule(() => launchShell(1 - offset, false), delay + delayOffset);
+    }
+    count += 1;
+    delay += 200;
+  }
+
+  return 3400 + barrageCountHalf * 250;
+}
+
+let smallBarrageLastCalled = 0;
+
+export function seqSmallBarrage(
+  comets: Comet[],
+  width: number,
+  height: number,
+  config: FireworksConfig,
+  schedule: (fn: () => void, ms: number) => void,
+  audio?: FireworksAudioHooks,
+): number {
+  smallBarrageLastCalled = Date.now();
+  const isDesktop = width >= 640;
+  const barrageCount = isDesktop ? 11 : 5;
+  const specialIndex = isDesktop ? 3 : 1;
+  const shellSize = Math.max(0.5, config.shellSize - 2);
+
+  const launchShell = (x: number, useSpecial: boolean) => {
+    let shell: ShellRecipe;
+    if (config.shellType === 'random') {
+      shell = useSpecial ? randomFastShell(shellSize) : randomMainShell(shellSize);
+    } else {
+      shell = resolveShell(config.shellType, shellSize);
+    }
+    launchComet(comets, width, height, x, barrageHeight(x) * 0.75, shell, config.quality, audio);
+  };
+
+  let count = 0;
+  let delay = 0;
+  while (count < barrageCount) {
+    if (count === 0) {
+      launchShell(0.5, false);
+      count += 1;
+    } else {
+      const offset = ((count + 1) / barrageCount) / 2;
+      const delayOffset = Math.random() * 30 + 30;
+      const useSpecial = count === specialIndex;
+      schedule(() => launchShell(0.5 + offset, useSpecial), delay);
+      schedule(() => launchShell(0.5 - offset, useSpecial), delay + delayOffset);
+      count += 2;
+    }
+    delay += 200;
+  }
+
+  return 3400 + barrageCount * 120;
+}
+
+const SMALL_BARRAGE_COOLDOWN = 15000;
+
 const FINALE_BURST_COUNT = 32;
+const SEQUENCE_GAP = 1.25;
 
 export function nextAutoSequence(
   comets: Comet[],
@@ -845,24 +1249,35 @@ export function nextAutoSequence(
     autoLaunchTick(comets, width, height, config, audio);
     if (finaleCounter.count < FINALE_BURST_COUNT) {
       finaleCounter.count += 1;
-      return 170;
+      return 220;
     }
     finaleCounter.count = 0;
     return 6000;
   }
 
   const rand = Math.random();
-  if (rand < 0.12) return seqTriple(comets, width, height, config, schedule, audio);
-  if (rand < 0.5) return seqTwoRandom(comets, width, height, config, schedule, audio);
-  return autoLaunchTick(comets, width, height, config, audio);
+  if (rand < 0.08 && Date.now() - smallBarrageLastCalled > SMALL_BARRAGE_COOLDOWN) {
+    return seqSmallBarrage(comets, width, height, config, schedule, audio);
+  }
+  if (rand < 0.1) return seqPyramid(comets, width, height, config, schedule, audio);
+  if (rand < 0.6) return autoLaunchTick(comets, width, height, config, audio);
+  if (rand < 0.8) return seqTwoRandom(comets, width, height, config, schedule, audio);
+  return seqTriple(comets, width, height, config, schedule, audio);
 }
 
+export { SEQUENCE_GAP };
+
 export function pickShell(size: number): ShellRecipe {
-  const r = Math.random();
-  if (r < 0.35) return crysanthemumShell(size);
-  if (r < 0.48) return crossetteShell(size);
-  if (r < 0.62) return crackleShell(size);
-  if (r < 0.75) return strobeShell(size);
-  if (r < 0.88) return ringShell(size);
-  return willowShell(size);
+  const names: Array<() => ShellRecipe> = [
+    () => crysanthemumShell(size),
+    () => crossetteShell(size),
+    () => crackleShell(size),
+    () => strobeShell(size),
+    () => ringShell(size),
+    () => willowShell(size),
+    () => floralShell(size),
+    () => palmShell(size),
+    () => horsetailShell(size),
+  ];
+  return names[Math.floor(Math.random() * names.length)]!();
 }
