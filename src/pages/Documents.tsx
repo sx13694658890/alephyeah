@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { AiHubCard } from '../components/ai/AiHubCard';
 import { AiResourceModal } from '../components/ai/AiResourceModal';
 import { AnimatedSection } from '../components/AnimatedSection';
+import { DocumentModal } from '../components/documents/DocumentModal';
 import type { AiResourceView } from '../data/ai-resources';
 import { usePreferences } from '../context/PreferencesContext';
+import { crawlerDocuments, type CrawlerDocument } from '../docs/crawler';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
 
@@ -51,20 +53,37 @@ const DocumentCard = ({
   description,
   date,
   category,
+  onClick,
 }: {
   title: string;
   description: string;
   date: string;
   category: string;
+  onClick?: () => void;
 }) => {
   const { ref, onMouseMove, onMouseLeave } = useTiltHover<HTMLDivElement>({
     maxTilt: 3,
     scale: 1.01,
   });
 
+  const interactive = Boolean(onClick);
+
   return (
     <div
       ref={ref}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        interactive
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick?.();
+              }
+            }
+          : undefined
+      }
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       data-animate
@@ -72,7 +91,11 @@ const DocumentCard = ({
         opacity: 0,
         transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease, border-color 0.5s ease',
       }}
-      className="group cursor-pointer rounded-xl border border-border bg-white/50 p-5 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/20 hover:shadow-lg dark:bg-white/8"
+      className={`group rounded-xl border border-border bg-white/50 p-5 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 dark:bg-white/8 ${
+        interactive
+          ? 'cursor-pointer hover:border-accent/20 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40'
+          : ''
+      }`}
     >
       <div className="mb-1 flex items-center gap-3">
         <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent transition-colors duration-300 group-hover:bg-accent/15">
@@ -94,10 +117,17 @@ export const Documents = () => {
   const { t } = usePreferences();
   const [aiOpen, setAiOpen] = useState(false);
   const [aiView, setAiView] = useState<AiResourceView>('skills');
+  const [docOpen, setDocOpen] = useState(false);
+  const [activeDoc, setActiveDoc] = useState<CrawlerDocument | null>(null);
 
   const openAiHub = (view: AiResourceView) => {
     setAiView(view);
     setAiOpen(true);
+  };
+
+  const openDocument = (doc: CrawlerDocument) => {
+    setActiveDoc(doc);
+    setDocOpen(true);
   };
 
   return (
@@ -116,12 +146,23 @@ export const Documents = () => {
       </AnimatedSection>
 
       <div ref={listRef} className="space-y-4">
+        {crawlerDocuments.map((doc) => (
+          <DocumentCard
+            key={doc.id}
+            title={doc.title}
+            description={doc.description}
+            date={doc.date}
+            category={doc.category}
+            onClick={() => openDocument(doc)}
+          />
+        ))}
         {documents.map((doc) => (
           <DocumentCard key={doc.title} {...doc} />
         ))}
       </div>
 
       <AiResourceModal open={aiOpen} onClose={() => setAiOpen(false)} view={aiView} />
+      <DocumentModal open={docOpen} doc={activeDoc} onClose={() => setDocOpen(false)} />
     </>
   );
 };

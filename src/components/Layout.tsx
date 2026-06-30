@@ -18,7 +18,7 @@ export const Layout = () => {
       />
       <PreferencesBar />
       <Navbar />
-      <main className="relative z-10 mx-auto max-w-5xl px-[max(1.25rem,env(safe-area-inset-left))] pb-[max(5rem,env(safe-area-inset-bottom))] pt-[max(6.5rem,calc(env(safe-area-inset-top)+5rem))] sm:px-6 sm:pt-28">
+      <main className="relative z-10 mx-auto max-w-5xl px-[max(1.25rem,env(safe-area-inset-left))] pb-[max(5rem,env(safe-area-inset-bottom))] pt-[max(7.25rem,calc(env(safe-area-inset-top)+6rem))] sm:px-6 sm:pt-28">
         <Outlet />
       </main>
     </div>

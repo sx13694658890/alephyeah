@@ -14,18 +14,12 @@ import {
 } from '../i18n/locales';
 import {
   applyResolvedTheme,
-  cycleThemeMode,
   persistThemeMode,
   readStoredThemeMode,
   resolveTheme,
   type ResolvedTheme,
   type ThemeMode,
 } from '../lib/theme';
-
-const MOBILE_MQ = '(max-width: 639px)';
-
-const isMobileViewport = () =>
-  typeof window !== 'undefined' && window.matchMedia(MOBILE_MQ).matches;
 
 type MessageTree = typeof messages.en;
 
@@ -53,7 +47,6 @@ interface PreferencesContextValue {
   themeMode: ThemeMode;
   resolvedTheme: ResolvedTheme;
   setThemeMode: (mode: ThemeMode) => void;
-  cycleTheme: () => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: (path: string) => string;
@@ -76,20 +69,6 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
     persistThemeMode(mode);
   }, []);
 
-  const applyThemeForViewport = useCallback(
-    (mode: ThemeMode) => {
-      if (isMobileViewport()) {
-        const resolved = resolveTheme('system');
-        setResolvedTheme(resolved);
-        applyResolvedTheme(resolved);
-        document.documentElement.dataset.themeMode = 'system';
-        return;
-      }
-      applyTheme(mode);
-    },
-    [applyTheme],
-  );
-
   const setThemeMode = useCallback(
     (mode: ThemeMode) => {
       setThemeModeState(mode);
@@ -97,14 +76,6 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
     },
     [applyTheme],
   );
-
-  const cycleTheme = useCallback(() => {
-    setThemeModeState((prev) => {
-      const next = cycleThemeMode(prev);
-      applyTheme(next);
-      return next;
-    });
-  }, [applyTheme]);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);
@@ -117,32 +88,9 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    applyTheme(themeMode);
     document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
-  }, [locale]);
-
-  useEffect(() => {
-    applyThemeForViewport(themeMode);
-    document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
-
-    const systemMq = window.matchMedia('(prefers-color-scheme: dark)');
-    const onSystemChange = () => {
-      if (isMobileViewport() || themeMode === 'system') {
-        const resolved = resolveTheme('system');
-        setResolvedTheme(resolved);
-        applyResolvedTheme(resolved);
-      }
-    };
-
-    const viewportMq = window.matchMedia(MOBILE_MQ);
-    const onViewportChange = () => applyThemeForViewport(themeMode);
-
-    systemMq.addEventListener('change', onSystemChange);
-    viewportMq.addEventListener('change', onViewportChange);
-    return () => {
-      systemMq.removeEventListener('change', onSystemChange);
-      viewportMq.removeEventListener('change', onViewportChange);
-    };
-  }, [applyThemeForViewport, themeMode, locale]);
+  }, [applyTheme, themeMode, locale]);
 
   const t = useCallback(
     (path: string) => getMessage(messages[locale], path),
@@ -154,12 +102,11 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
       themeMode,
       resolvedTheme,
       setThemeMode,
-      cycleTheme,
       locale,
       setLocale,
       t,
     }),
-    [themeMode, resolvedTheme, setThemeMode, cycleTheme, locale, setLocale, t],
+    [themeMode, resolvedTheme, setThemeMode, locale, setLocale, t],
   );
 
   return (

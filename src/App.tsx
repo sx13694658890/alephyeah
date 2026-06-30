@@ -6,12 +6,14 @@ import { Projects } from './pages/Projects';
 import { Documents } from './pages/Documents';
 import { Dependencies } from './pages/Dependencies';
 import { About } from './pages/About';
+import { FireworksPage } from './pages/FireworksPage';
 
 const App = () => {
   return (
     <PreferencesProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/effects/fireworks" element={<FireworksPage />} />
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/projects" element={<Projects />} />

@@ -1,11 +1,11 @@
-import { ThemeSwitch } from './ThemeSwitch';
+import { ThemeModeToggle } from './ThemeModeToggle';
 
 export const PreferencesBar = () => {
   return (
-    <div
-      className="fixed right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))] z-[60] hidden items-center sm:flex"
-    >
-      <ThemeSwitch />
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[60] flex justify-end px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <div className="pointer-events-auto">
+        <ThemeModeToggle />
+      </div>
     </div>
   );
 };

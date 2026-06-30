@@ -1,3 +1,4 @@
+import { EffectsShowcase } from '../components/effects/EffectsShowcase';
 import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
@@ -66,6 +67,8 @@ export const About = () => {
             <SkillCard key={skill.label} {...skill} />
           ))}
         </div>
+
+        <EffectsShowcase />
 
         <div className="pt-6" data-animate style={{ opacity: 0 }}>
           <h2 className="mb-4 text-xl font-medium text-foreground">{t('about.contactTitle')}</h2>

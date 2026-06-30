@@ -36,7 +36,7 @@ export const AiHubCard = ({ onOpen, className }: AiHubCardProps) => {
             AI 资源库
           </span>
         }
-        text="收录提示词模版、Cursor Skills 与 MCP 配置。点击分类快速浏览，支持 Markdown 在线预览。"
+        text="收录提示词模版、Skills 与 MCP 配置。点击分类快速浏览，支持 Markdown 在线预览。"
         viewMoreLabel="浏览全部"
         onViewMore={() => onOpen('all')}
         logoIcon={<Sparkles className="h-5 w-5" strokeWidth={1.6} aria-hidden />}

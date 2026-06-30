@@ -1,22 +1,19 @@
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type ResolvedTheme = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark';
+export type ResolvedTheme = ThemeMode;
 
 const STORAGE_KEY = 'alephyeah-theme';
 
-export const getSystemTheme = (): ResolvedTheme =>
-  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-export const resolveTheme = (mode: ThemeMode): ResolvedTheme =>
-  mode === 'system' ? getSystemTheme() : mode;
+export const resolveTheme = (mode: ThemeMode): ResolvedTheme => mode;
 
 export const readStoredThemeMode = (): ThemeMode => {
   try {
     const value = localStorage.getItem(STORAGE_KEY);
-    if (value === 'light' || value === 'dark' || value === 'system') return value;
+    if (value === 'light' || value === 'dark') return value;
+    if (value === 'system') return 'light';
   } catch {
     /* ignore */
   }
-  return 'system';
+  return 'light';
 };
 
 export const persistThemeMode = (mode: ThemeMode) => {
@@ -35,12 +32,6 @@ export const applyResolvedTheme = (resolved: ResolvedTheme) => {
 
 export const initTheme = () => {
   const mode = readStoredThemeMode();
-  applyResolvedTheme(resolveTheme(mode));
+  applyResolvedTheme(mode);
   document.documentElement.dataset.themeMode = mode;
-};
-
-export const cycleThemeMode = (mode: ThemeMode): ThemeMode => {
-  if (mode === 'light') return 'system';
-  if (mode === 'system') return 'dark';
-  return 'light';
 };

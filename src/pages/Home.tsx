@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { animate, stagger } from 'animejs';
 import { usePreferences } from '../context/PreferencesContext';
 import { useParallaxScroll } from '../hooks/useParallaxScroll';
+import { MusicPlayer } from '../components/music/MusicPlayer';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
 import { SkillSection } from '../components/skill/SkillSection';
@@ -57,6 +58,8 @@ export const Home = () => {
 
   return (
     <>
+      <MusicPlayer />
+
       <section className="mb-32 min-h-[65vh]">
         <div ref={heroParallaxRef} className="mx-auto max-w-2xl pt-16 text-center">
           <h1 className="hero-title mb-6 text-4xl font-light tracking-tight text-foreground md:text-5xl">
