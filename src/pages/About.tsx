@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 import { EffectsShowcase } from '../components/effects/EffectsShowcase';
-=======
-import { Mail } from 'lucide-react';
->>>>>>> Stashed changes
 import { usePreferences } from '../context/PreferencesContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
