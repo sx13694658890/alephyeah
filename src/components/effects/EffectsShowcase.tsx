@@ -9,8 +9,8 @@ import { cn } from '../../lib/cn';
 import { EffectViewport } from './EffectViewport';
 import type { EffectId } from './types';
 
-const FireworksEffect = lazy(() =>
-  import('./FireworksEffect').then((m) => ({ default: m.FireworksEffect })),
+const FireworksPreview = lazy(() =>
+  import('./FireworksPreview').then((m) => ({ default: m.FireworksPreview })),
 );
 const RainWindowEffect = lazy(() =>
   import('./RainWindowEffect').then((m) => ({ default: m.RainWindowEffect })),
@@ -24,7 +24,7 @@ const iconMap = {
 const EffectPreview = ({ id }: { id: EffectId }) => {
   switch (id) {
     case 'fireworks':
-      return <FireworksEffect />;
+      return <FireworksPreview />;
     case 'rain-window':
       return <RainWindowEffect />;
     default:

@@ -1,40 +1,31 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Layers, Pause, Play, Settings, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Pause, Play, Settings, Volume2, VolumeX } from 'lucide-react';
 
 import {
   FireworksCanvas,
   useFireworksConfig,
   useFireworksSound,
 } from '../components/effects/FireworksCanvas';
-import { FireworksEffect } from '../components/effects/FireworksEffect';
 import { FireworksSettingsPanel } from '../components/effects/FireworksSettingsPanel';
 import { fireworksSound } from '../lib/fireworks/soundManager';
 import { usePreferences } from '../context/PreferencesContext';
 import { cn } from '../lib/cn';
 
-type FireworksMode = '3d' | '2d';
-
 export const FireworksPage = () => {
   const { t } = usePreferences();
   const { config, updateConfig } = useFireworksConfig();
   const { sound, updateSound, toggleSound } = useFireworksSound();
-  const [mode, setMode] = useState<FireworksMode>('3d');
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [simSpeed, setSimSpeed] = useState(0.82);
   const [sky, setSky] = useState({ r: 0, g: 0, b: 0 });
 
-  const is2d = mode === '2d';
-  const bgStyle = is2d
-    ? { backgroundColor: `rgb(${sky.r | 0}, ${sky.g | 0}, ${sky.b | 0})` }
-    : { backgroundColor: '#050505' };
+  const bgStyle = {
+    backgroundColor: `rgb(${sky.r | 0}, ${sky.g | 0}, ${sky.b | 0})`,
+  };
 
   const togglePause = useCallback(() => setPaused((p) => !p), []);
-  const toggleMode = useCallback(() => {
-    setMode((m) => (m === '3d' ? '2d' : '3d'));
-    setMenuOpen(false);
-  }, []);
   const openMenu = useCallback(() => {
     void fireworksSound.unlock();
     setMenuOpen(true);
@@ -52,62 +43,51 @@ export const FireworksPage = () => {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'p' || event.key === 'P') togglePause();
-      if (is2d && (event.key === 'o' || event.key === 'O')) openMenu();
-      if (is2d && (event.key === 'm' || event.key === 'M')) void toggleSound();
+      if (event.key === 'o' || event.key === 'O') openMenu();
+      if (event.key === 'm' || event.key === 'M') void toggleSound();
       if (event.key === 'Escape') closeMenu();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [togglePause, openMenu, closeMenu, toggleSound, is2d]);
+  }, [togglePause, openMenu, closeMenu, toggleSound]);
 
-  const controlsHidden = is2d && config.hideControls && !menuOpen;
+  const controlsHidden = config.hideControls && !menuOpen;
 
   return (
     <div className="relative min-h-screen overflow-hidden text-white transition-colors duration-300" style={bgStyle}>
-      {is2d ? (
-        <FireworksCanvas
-          fullscreen
-          paused={paused}
-          config={config}
-          sound={sound}
-          simSpeed={simSpeed}
-          onSimSpeedChange={setSimSpeed}
-          onSkyColor={setSky}
-        />
-      ) : (
-        <div className="fixed inset-0 z-0">
-          <FireworksEffect paused={paused} className="h-full w-full touch-none" />
-        </div>
-      )}
+      <FireworksCanvas
+        fullscreen
+        paused={paused}
+        config={config}
+        sound={sound}
+        simSpeed={simSpeed}
+        onSimSpeedChange={setSimSpeed}
+        onSkyColor={setSky}
+      />
 
       <div
         className={cn(
-          'fixed inset-x-0 top-0 z-30 flex items-start justify-between p-[max(0.5rem,env(safe-area-inset-top))] px-[max(0.75rem,env(safe-area-inset-left))] transition-opacity duration-300 pointer-events-none',
-          controlsHidden ? 'opacity-0 hover:opacity-100' : 'opacity-100',
-          !controlsHidden && is2d && config.autoLaunch && !menuOpen && 'opacity-35 hover:opacity-100',
+          'fixed inset-x-0 top-0 z-30 flex items-start justify-between p-[max(0.5rem,env(safe-area-inset-top))] px-[max(0.75rem,env(safe-area-inset-left))] transition-opacity duration-300',
+          controlsHidden ? 'pointer-events-none opacity-0 hover:pointer-events-auto hover:opacity-100' : 'opacity-100',
+          !controlsHidden && config.autoLaunch && !menuOpen && 'opacity-35 hover:opacity-100',
         )}
       >
         <Link
           to="/about"
           onClick={() => void fireworksSound.unlock()}
-          className="pointer-events-auto inline-flex items-center gap-2 rounded-xl border border-white/12 bg-black/40 px-3 py-2 text-sm text-white/90 backdrop-blur-md transition-all hover:border-white/20 hover:bg-black/60"
+          className="inline-flex items-center gap-2 rounded-xl border border-white/12 bg-black/40 px-3 py-2 text-sm text-white/90 backdrop-blur-md transition-all hover:border-white/20 hover:bg-black/60"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('fireworks.back')}
         </Link>
 
-        <div className="pointer-events-auto flex gap-1">
-          <ToolbarBtn label={t('fireworks.modeToggle')} onClick={toggleMode}>
-            <Layers className="h-6 w-6" />
+        <div className="flex gap-1">
+          <ToolbarBtn
+            label={sound.enabled ? t('fireworks.mute') : t('fireworks.unmute')}
+            onClick={() => void toggleSound()}
+          >
+            {sound.enabled ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
           </ToolbarBtn>
-          {is2d ? (
-            <ToolbarBtn
-              label={sound.enabled ? t('fireworks.mute') : t('fireworks.unmute')}
-              onClick={() => void toggleSound()}
-            >
-              {sound.enabled ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
-            </ToolbarBtn>
-          ) : null}
           <ToolbarBtn
             label={paused ? t('fireworks.play') : t('fireworks.pause')}
             onClick={() => {
@@ -117,11 +97,9 @@ export const FireworksPage = () => {
           >
             {paused ? <Play className="h-6 w-6" /> : <Pause className="h-6 w-6" />}
           </ToolbarBtn>
-          {is2d ? (
-            <ToolbarBtn label={t('fireworks.settings')} onClick={openMenu}>
-              <Settings className="h-6 w-6" />
-            </ToolbarBtn>
-          ) : null}
+          <ToolbarBtn label={t('fireworks.settings')} onClick={openMenu}>
+            <Settings className="h-6 w-6" />
+          </ToolbarBtn>
         </div>
       </div>
 
@@ -131,20 +109,18 @@ export const FireworksPage = () => {
           controlsHidden && 'opacity-0',
         )}
       >
-        {is2d ? t('fireworks.hint2d') : t('fireworks.hint3d')}
+        {t('fireworks.hint')}
       </p>
 
-      {is2d ? (
-        <FireworksSettingsPanel
-          open={menuOpen}
-          onClose={closeMenu}
-          config={config}
-          sound={sound}
-          onConfigChange={updateConfig}
-          onSoundChange={updateSound}
-          t={t}
-        />
-      ) : null}
+      <FireworksSettingsPanel
+        open={menuOpen}
+        onClose={closeMenu}
+        config={config}
+        sound={sound}
+        onConfigChange={updateConfig}
+        onSoundChange={updateSound}
+        t={t}
+      />
     </div>
   );
 };

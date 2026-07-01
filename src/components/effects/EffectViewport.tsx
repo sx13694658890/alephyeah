@@ -58,8 +58,8 @@ export const EffectViewport = ({ title, hint, open, onClose, action, children }:
         </div>
       </div>
 
-      <div className="relative h-[min(360px,52vh)] w-full overflow-hidden bg-[#0c0b0a]">
-        {children}
+      <div className="relative h-[min(360px,52vh)] w-full overflow-hidden bg-black">
+        <div className="absolute inset-0">{children}</div>
       </div>
     </div>
   );
