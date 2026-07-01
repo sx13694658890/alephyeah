@@ -1,5 +1,6 @@
 import antiCrawlerBasics from './anti-crawler-basics.md';
 import engineeringSpec from './engineering-spec.md';
+import proxyBanMechanism from './proxy-ban-mechanism.md';
 import proxyIpManagement from './proxy-ip-management.md';
 
 import type { ProjectDocument } from '../types';
@@ -24,6 +25,15 @@ export const crawlerDocuments: CrawlerDocument[] = [
     date: '2025',
     category: 'Technical',
     content: engineeringSpec,
+  },
+  {
+    id: 'proxy-ban-mechanism',
+    title: '代理封禁机制',
+    description:
+      '服务端三层检测链路（频率检测 → UA 检测 → 行为检测）与 429/412/403 封禁升级路径分析。',
+    date: '2025',
+    category: 'Technical',
+    content: proxyBanMechanism,
   },
   {
     id: 'proxy-ip-management',
