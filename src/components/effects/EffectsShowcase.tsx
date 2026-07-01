@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Flame, Sparkles, Type } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CloudRain, Flame, Maximize2 } from 'lucide-react';
 import { animate } from 'animejs';
 
 import { effectItems } from '../../data/effects';
@@ -9,25 +9,24 @@ import { cn } from '../../lib/cn';
 import { EffectViewport } from './EffectViewport';
 import type { EffectId } from './types';
 
-const Fireworks3DEffect = lazy(() =>
-  import('./Fireworks3DEffect').then((m) => ({ default: m.Fireworks3DEffect })),
+const FireworksEffect = lazy(() =>
+  import('./FireworksEffect').then((m) => ({ default: m.FireworksEffect })),
 );
-const ParticleTextEffect = lazy(() =>
-  import('./ParticleTextEffect').then((m) => ({ default: m.ParticleTextEffect })),
+const RainWindowEffect = lazy(() =>
+  import('./RainWindowEffect').then((m) => ({ default: m.RainWindowEffect })),
 );
 
 const iconMap = {
-  'fireworks-2d': Sparkles,
-  'fireworks-3d': Flame,
-  'particle-text': Type,
+  fireworks: Flame,
+  'rain-window': CloudRain,
 } as const;
 
 const EffectPreview = ({ id }: { id: EffectId }) => {
   switch (id) {
-    case 'fireworks-3d':
-      return <Fireworks3DEffect />;
-    case 'particle-text':
-      return <ParticleTextEffect />;
+    case 'fireworks':
+      return <FireworksEffect />;
+    case 'rain-window':
+      return <RainWindowEffect />;
     default:
       return null;
   }
@@ -35,21 +34,27 @@ const EffectPreview = ({ id }: { id: EffectId }) => {
 
 export const EffectsShowcase = () => {
   const { t } = usePreferences();
-  const navigate = useNavigate();
   const [activeId, setActiveId] = useState<EffectId | null>(null);
 
-  const handleSelect = useCallback(
-    (id: EffectId) => {
-      if (id === 'fireworks-2d') {
-        navigate('/effects/fireworks');
-        return;
+  const handleSelect = useCallback((id: EffectId) => {
+    setActiveId((prev) => {
+      const next = prev === id ? null : id;
+      if (next) {
+        requestAnimationFrame(() => {
+          const el = document.querySelector(`[data-effect-id="${next}"]`);
+          if (el instanceof HTMLElement) {
+            animate(el, {
+              scale: [0.96, 1],
+              opacity: [0.7, 1],
+              ease: 'outExpo',
+              duration: 420,
+            });
+          }
+        });
       }
-      setActiveId((prev) => (prev === id ? null : id));
-    },
-    [navigate],
-  );
-
-  const handleClose = useCallback(() => setActiveId(null), []);
+      return next;
+    });
+  }, []);
 
   const activeItem = effectItems.find((item) => item.id === activeId);
 
@@ -58,7 +63,7 @@ export const EffectsShowcase = () => {
       <h2 className="mb-2 text-xl font-medium text-foreground">{t('about.effectsTitle')}</h2>
       <p className="mb-4 text-sm leading-relaxed text-foreground/55">{t('about.effectsSubtitle')}</p>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {effectItems.map((item) => {
           const Icon = iconMap[item.id];
           const active = activeId === item.id;
@@ -67,22 +72,7 @@ export const EffectsShowcase = () => {
             <button
               key={item.id}
               type="button"
-              onClick={() => {
-                handleSelect(item.id);
-                if (!active) {
-                  requestAnimationFrame(() => {
-                    const el = document.querySelector(`[data-effect-id="${item.id}"]`);
-                    if (el instanceof HTMLElement) {
-                      animate(el, {
-                        scale: [0.96, 1],
-                        opacity: [0.7, 1],
-                        ease: 'outExpo',
-                        duration: 420,
-                      });
-                    }
-                  });
-                }
-              }}
+              onClick={() => handleSelect(item.id)}
               className={cn(
                 'group flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all duration-300',
                 'bg-white/35 backdrop-blur-sm dark:bg-white/6',
@@ -116,8 +106,19 @@ export const EffectsShowcase = () => {
           <EffectViewport
             open
             title={t(activeItem.labelKey)}
-            hint={t('about.effectsHint')}
-            onClose={handleClose}
+            hint={t(activeItem.hintKey ?? 'about.effectsHint')}
+            onClose={() => setActiveId(null)}
+            action={
+              activeItem.fullscreenPath ? (
+                <Link
+                  to={activeItem.fullscreenPath}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border/60 px-2.5 py-1.5 text-xs text-foreground/65 transition-colors hover:border-accent/30 hover:text-accent"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                  {t('about.effectsFullscreen')}
+                </Link>
+              ) : undefined
+            }
           >
             <Suspense
               fallback={

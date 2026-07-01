@@ -29,6 +29,10 @@ export default async () =>
                 test: /\.md$/,
                 type: 'asset/source',
               },
+              {
+                test: /\.glsl$/,
+                type: 'asset/source',
+              },
             ],
           },
         },
