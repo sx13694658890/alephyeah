@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Mail } from 'lucide-react';
 
 import { DocumentModal } from '../components/documents/DocumentModal';
 import { EffectsShowcase } from '../components/effects/EffectsShowcase';
