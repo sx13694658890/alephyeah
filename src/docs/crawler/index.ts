@@ -1,14 +1,10 @@
 import antiCrawlerBasics from './anti-crawler-basics.md';
 import engineeringSpec from './engineering-spec.md';
+import proxyIpManagement from './proxy-ip-management.md';
 
-export interface CrawlerDocument {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  category: string;
-  content: string;
-}
+import type { ProjectDocument } from '../types';
+
+export type CrawlerDocument = ProjectDocument;
 
 export const crawlerDocuments: CrawlerDocument[] = [
   {
@@ -28,6 +24,15 @@ export const crawlerDocuments: CrawlerDocument[] = [
     date: '2025',
     category: 'Technical',
     content: engineeringSpec,
+  },
+  {
+    id: 'proxy-ip-management',
+    title: '代理 IP 的使用与管理',
+    description:
+      '代理类型与选型、代理池架构设计、获取/检测/分配实现，以及与 httpx 爬虫集成的最佳实践。',
+    date: '2025',
+    category: 'Technical',
+    content: proxyIpManagement,
   },
 ];
 

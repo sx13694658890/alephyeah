@@ -5,11 +5,19 @@ import { AnimatedSection } from '../components/AnimatedSection';
 import { DocumentModal } from '../components/documents/DocumentModal';
 import type { AiResourceView } from '../data/ai-resources';
 import { usePreferences } from '../context/PreferencesContext';
-import { crawlerDocuments, type CrawlerDocument } from '../docs/crawler';
+import { crawlerDocuments } from '../docs/crawler';
+import { rsbuildDocument } from '../docs/rsbuild';
+import type { ProjectDocument } from '../docs/types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
 
-const documents = [
+const documents: Array<{
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  doc?: ProjectDocument;
+}> = [
   {
     title: 'Architecture Overview',
     description: 'Understanding the layered build pipeline, monorepo structure, and key design decisions behind the project stack.',
@@ -21,6 +29,7 @@ const documents = [
     description: 'How the Rsbuild config factory works — from shared defaults to project-specific overrides and environment injection.',
     date: '2025',
     category: 'Technical',
+    doc: rsbuildDocument,
   },
   {
     title: 'Icon System Usage',
@@ -118,14 +127,14 @@ export const Documents = () => {
   const [aiOpen, setAiOpen] = useState(false);
   const [aiView, setAiView] = useState<AiResourceView>('skills');
   const [docOpen, setDocOpen] = useState(false);
-  const [activeDoc, setActiveDoc] = useState<CrawlerDocument | null>(null);
+  const [activeDoc, setActiveDoc] = useState<ProjectDocument | null>(null);
 
   const openAiHub = (view: AiResourceView) => {
     setAiView(view);
     setAiOpen(true);
   };
 
-  const openDocument = (doc: CrawlerDocument) => {
+  const openDocument = (doc: ProjectDocument) => {
     setActiveDoc(doc);
     setDocOpen(true);
   };
@@ -157,7 +166,14 @@ export const Documents = () => {
           />
         ))}
         {documents.map((doc) => (
-          <DocumentCard key={doc.title} {...doc} />
+          <DocumentCard
+            key={doc.title}
+            title={doc.title}
+            description={doc.description}
+            date={doc.date}
+            category={doc.category}
+            onClick={doc.doc ? () => openDocument(doc.doc!) : undefined}
+          />
         ))}
       </div>
 

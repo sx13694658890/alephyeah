@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
-import type { CrawlerDocument } from '../../docs/crawler';
+import type { ProjectDocument } from '../../docs/types';
 import { cn } from '../../lib/cn';
 import { MarkdownPreview } from '../ai/MarkdownPreview';
 
 interface DocumentModalProps {
   open: boolean;
-  doc: CrawlerDocument | null;
+  doc: ProjectDocument | null;
   onClose: () => void;
 }
 

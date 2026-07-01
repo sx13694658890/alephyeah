@@ -1,22 +1,56 @@
+import { useState } from 'react';
+
+import { DocumentModal } from '../components/documents/DocumentModal';
 import { EffectsShowcase } from '../components/effects/EffectsShowcase';
 import { usePreferences } from '../context/PreferencesContext';
+import { rsbuildDocument } from '../docs/rsbuild';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
+import { cn } from '../lib/cn';
 
 const CONTACT_EMAIL = 'sxl5253999Xl@gmail.com';
 
 function SkillCard({ label, desc }: { label: string; desc: string }) {
+function SkillCard({
+  label,
+  desc,
+  onClick,
+}: {
+  label: string;
+  desc: string;
+  onClick?: () => void;
+}) {
   const { ref, onMouseMove, onMouseLeave } = useTiltHover<HTMLDivElement>({
     maxTilt: 4,
     scale: 1.03,
   });
 
+  const interactive = Boolean(onClick);
+
   return (
     <div
       ref={ref}
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        interactive
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick?.();
+              }
+            }
+          : undefined
+      }
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className="rounded-xl border border-border bg-white/40 p-4 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/25 hover:shadow-md dark:bg-white/8"
+      className={cn(
+        'rounded-xl border border-border bg-white/40 p-4 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 dark:bg-white/8',
+        interactive &&
+          'cursor-pointer hover:border-accent/25 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+        !interactive && 'hover:border-accent/25 hover:shadow-md',
+      )}
       style={{
         opacity: 0,
         transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease, border-color 0.5s ease',
@@ -33,11 +67,12 @@ export const About = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({});
   const contentRef = useScrollAnimation<HTMLDivElement>({ delay: 120, staggerDelay: 80 });
   const { t } = usePreferences();
+  const [docOpen, setDocOpen] = useState(false);
 
   const skills = [
     { label: 'TypeScript', desc: t('about.skillTs') },
     { label: 'React', desc: t('about.skillReact') },
-    { label: 'Rsbuild', desc: t('about.skillRsbuild') },
+    { label: 'Rsbuild', desc: t('about.skillRsbuild'), onClick: () => setDocOpen(true) },
     { label: 'Tailwind CSS', desc: t('about.skillTailwind') },
     { label: 'Three.js', desc: t('about.skillThree') },
     { label: 'Cloudflare', desc: t('about.skillCloudflare') },
@@ -110,6 +145,8 @@ export const About = () => {
           </div>
         </div>
       </div>
+
+      <DocumentModal open={docOpen} doc={rsbuildDocument} onClose={() => setDocOpen(false)} />
     </>
   );
 };

@@ -10,10 +10,11 @@ interface EffectViewportProps {
   hint?: string;
   open: boolean;
   onClose: () => void;
+  action?: ReactNode;
   children: ReactNode;
 }
 
-export const EffectViewport = ({ title, hint, open, onClose, children }: EffectViewportProps) => {
+export const EffectViewport = ({ title, hint, open, onClose, action, children }: EffectViewportProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -44,7 +45,9 @@ export const EffectViewport = ({ title, hint, open, onClose, children }: EffectV
           <h3 className="truncate text-sm font-medium text-foreground">{title}</h3>
           {hint ? <p className="mt-0.5 text-xs text-foreground/45">{hint}</p> : null}
         </div>
-        <button
+        <div className="flex shrink-0 items-center gap-1">
+          {action}
+          <button
           type="button"
           onClick={onClose}
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-foreground/50 transition-colors hover:bg-muted/60 hover:text-foreground"
@@ -52,10 +55,11 @@ export const EffectViewport = ({ title, hint, open, onClose, children }: EffectV
         >
           <X className="h-4 w-4" />
         </button>
+        </div>
       </div>
 
-      <div className="relative h-[min(360px,52vh)] w-full overflow-hidden bg-[#0c0b0a]">
-        {children}
+      <div className="relative h-[min(360px,52vh)] w-full overflow-hidden bg-black">
+        <div className="absolute inset-0">{children}</div>
       </div>
     </div>
   );
