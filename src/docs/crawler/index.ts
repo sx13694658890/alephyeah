@@ -1,5 +1,6 @@
 import antiCrawlerBasics from './anti-crawler-basics.md';
 import engineeringSpec from './engineering-spec.md';
+import playwrightNetworkInterception from './playwright-network-interception.md';
 import proxyBanMechanism from './proxy-ban-mechanism.md';
 import proxyIpManagement from './proxy-ip-management.md';
 
@@ -43,6 +44,15 @@ export const crawlerDocuments: CrawlerDocument[] = [
     date: '2025',
     category: 'Technical',
     content: proxyIpManagement,
+  },
+  {
+    id: 'playwright-network-interception',
+    title: 'Playwright 网络请求拦截',
+    description:
+      '通过响应监听捕获 XHR/Fetch JSON 数据，以及路由规则阻止图片与字体加载以提升采集性能。',
+    date: '2025',
+    category: 'Technical',
+    content: playwrightNetworkInterception,
   },
 ];
 
