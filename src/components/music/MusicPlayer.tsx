@@ -5,61 +5,35 @@ import { animate } from 'animejs';
 import { defaultTrack, type MusicTrack } from '../../data/music';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { cn } from '../../lib/cn';
-import { Glass } from '../ul-liquid-glass';
 
 interface MusicPlayerProps {
   track?: MusicTrack;
   className?: string;
 }
 
-/** 与 Navbar 同系光学参数，略收敛以适配小尺寸控件 */
-const musicGlassOptics = {
-  frost: 18,
-  strength: 0.28,
-  curvature: 0.42,
-  depth: 0.5,
-  glow: 0.18,
-  glowSpread: 0.35,
-  sheen: 0.38,
-  sheenWidth: 2.5,
-  saturate: 1.28,
-  specular: 1,
-  brightness: 0.1,
-  dispersion: 0.28,
-};
-
-const MusicBars = ({ active }: { active: boolean }) => (
-  <div
-    className={cn('flex h-3 w-4 items-end gap-0.5', !active && 'opacity-35')}
-    aria-hidden
-  >
-    {[0, 1, 2].map((index) => (
-      <span
-        key={index}
-        className={cn(
-          'w-0.5 rounded-full bg-accent/70',
-          active && 'music-bar',
-        )}
-        style={active ? { animationDelay: `${index * 0.2}s` } : { height: '24%' }}
-      />
-    ))}
-  </div>
-);
+const PEEK_WIDTH = 34;
 
 export const MusicPlayer = ({ track = defaultTrack, className }: MusicPlayerProps) => {
   const shellRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
   const reducedMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [expanded, setExpanded] = useState(reducedMotion);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches);
+  }, []);
 
   useEffect(() => {
     if (reducedMotion || !shellRef.current) return;
 
     animate(shellRef.current, {
       opacity: [0, 1],
-      translateY: [14, 0],
+      translateX: [-8, 0],
       ease: 'outExpo',
-      duration: 820,
+      duration: 720,
       delay: 900,
     });
   }, [reducedMotion]);
@@ -97,95 +71,147 @@ export const MusicPlayer = ({ track = defaultTrack, className }: MusicPlayerProp
     audio.pause();
   }, []);
 
+  const openDrawer = useCallback(() => setExpanded(true), []);
+  const closeDrawer = useCallback(() => {
+    if (!isTouch) return;
+    setExpanded(false);
+  }, [isTouch]);
+
+  const handleCoverClick = useCallback(() => {
+    if (isTouch) {
+      setExpanded((value) => !value);
+      return;
+    }
+    if (!expanded) setExpanded(true);
+  }, [expanded, isTouch]);
+
+  const showExpanded = expanded || reducedMotion;
+
+  const handleMouseEnter = useCallback(() => {
+    if (isTouch) return;
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setExpanded(true);
+  }, [isTouch]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isTouch) return;
+    closeTimerRef.current = window.setTimeout(() => {
+      setExpanded(false);
+      closeTimerRef.current = null;
+    }, 320);
+  }, [isTouch]);
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    },
+    [],
+  );
+
   return (
     <div
       ref={shellRef}
       className={cn(
-        'pointer-events-none fixed z-40',
-        'left-[max(1rem,env(safe-area-inset-left))]',
-        'bottom-[max(1.25rem,env(safe-area-inset-bottom))]',
+        'fixed left-0 z-40',
+        'bottom-[max(0.75rem,env(safe-area-inset-bottom))]',
         reducedMotion ? 'opacity-100' : 'opacity-0',
         className,
       )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <audio ref={audioRef} src={track.audioSrc} loop preload="none" />
 
-      <Glass
-        radius={16}
-        optics={musicGlassOptics}
+      <div
         className={cn(
-          'music-player-glass pointer-events-auto w-fit transition-[box-shadow,transform] duration-500',
-          'rounded-2xl border border-white/60 bg-gradient-to-br from-white/52 via-white/36 to-white/20',
-          'shadow-[0_12px_36px_rgba(45,42,36,0.12),0_2px_8px_rgba(45,42,36,0.06),inset_0_1px_0_rgba(255,255,255,0.72)]',
-          'ring-1 ring-accent/15',
-          'dark:border-white/10 dark:from-white/14 dark:via-white/8 dark:to-white/5',
-          'dark:shadow-[0_12px_40px_rgba(0,0,0,0.38),inset_0_1px_0_rgba(255,255,255,0.1)]',
-          'dark:ring-white/8',
-          isPlaying && 'ring-accent/25 shadow-[0_14px_42px_rgba(154,139,122,0.18),inset_0_1px_0_rgba(255,255,255,0.75)]',
+          'will-change-transform transition-transform',
+          showExpanded
+            ? 'duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]'
+            : 'duration-[520ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
         )}
+        style={{
+          transform: showExpanded ? 'translateX(0)' : `translateX(calc(-100% + ${PEEK_WIDTH}px))`,
+        }}
       >
-        <div className="flex items-center gap-3 p-2 lg:gap-4 lg:p-2.5 lg:pr-4">
+        <div
+          className={cn(
+            'flex w-47 items-center gap-2 rounded-r-xl border border-l-0 border-border/55 bg-background/92 py-1.5 pl-1.5 pr-2 backdrop-blur-md',
+            'shadow-[0_6px_24px_rgba(45,42,36,0.1)] transition-[box-shadow,background-color] duration-500',
+            'dark:border-white/10 dark:bg-background/88 dark:shadow-[0_8px_28px_rgba(0,0,0,0.35)]',
+            showExpanded &&
+              'shadow-[0_10px_32px_rgba(45,42,36,0.14)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.42)]',
+          )}
+        >
           <button
             type="button"
-            onClick={togglePlay}
+            onClick={handleCoverClick}
             className={cn(
-              'group relative h-10 w-10 shrink-0 overflow-hidden rounded-xl',
-              'shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_2px_8px_rgba(45,42,36,0.12)]',
-              'transition-transform duration-300 hover:scale-[1.03] active:scale-95',
-              'lg:h-12 lg:w-12',
+              'relative h-8 w-8 shrink-0 overflow-hidden rounded-lg transition-transform duration-500 ease-out active:scale-95',
+              showExpanded && 'scale-100',
+              !showExpanded && 'scale-[0.96]',
             )}
-            aria-label={isPlaying ? '暂停' : '播放'}
+            aria-label={showExpanded ? (isPlaying ? '暂停' : '播放') : '展开音乐播放器'}
           >
             <img
               src={track.coverSrc}
-              alt={track.title}
+              alt=""
               className={cn(
                 'h-full w-full object-cover transition-transform duration-500',
-                isPlaying ? 'scale-110' : 'scale-100 group-hover:scale-105',
+                isPlaying && showExpanded && 'scale-105',
               )}
             />
-            <span
-              className={cn(
-                'pointer-events-none absolute inset-0 bg-accent/10 opacity-0 transition-opacity duration-300',
-                isPlaying && 'opacity-100',
-              )}
-              aria-hidden
-            />
+            {!showExpanded ? (
+              <span className="pointer-events-none absolute inset-0 bg-foreground/10" aria-hidden />
+            ) : null}
           </button>
 
-          <div className="hidden min-w-32 flex-col justify-center lg:flex">
-            <div className="flex items-center gap-2">
-              <span className="truncate text-sm font-light tracking-tight text-foreground">
-                {track.title}
-              </span>
-              <MusicBars active={isPlaying} />
-            </div>
-            <span className="text-[11px] font-light uppercase tracking-[0.14em] text-muted-foreground">
+          <div
+            className={cn(
+              'min-w-0 flex-1 overflow-hidden transition-[opacity,transform]',
+              showExpanded
+                ? 'translate-x-0 opacity-100 duration-500 delay-200 ease-out'
+                : 'translate-x-2 opacity-0 duration-300 delay-0 ease-in pointer-events-none',
+            )}
+          >
+            <p className="truncate text-[11px] font-medium leading-tight text-foreground">
+              {track.title}
+            </p>
+            <p className="truncate text-[9px] font-medium uppercase tracking-[0.12em] text-foreground/45">
               {track.artist}
-            </span>
+            </p>
           </div>
 
           <button
             type="button"
-            onClick={togglePlay}
+            onClick={() => {
+              if (!showExpanded) {
+                openDrawer();
+                return;
+              }
+              void togglePlay();
+            }}
+            onBlur={closeDrawer}
             className={cn(
-              'flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-              'border border-white/40 bg-white/30 text-foreground',
-              'shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_2px_6px_rgba(45,42,36,0.08)]',
-              'transition-all duration-300 hover:scale-105 hover:bg-white/45 active:scale-90',
-              'dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/16',
-              'lg:ml-0.5 lg:h-10 lg:w-10',
+              'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border/60 bg-muted/40 text-foreground/75',
+              'transition-[opacity,transform,background-color,color] hover:bg-muted/70 hover:text-foreground active:scale-90',
+              showExpanded
+                ? 'translate-x-0 scale-100 opacity-100 duration-500 delay-[280ms] ease-out'
+                : 'translate-x-1 scale-90 opacity-0 duration-300 delay-0 ease-in pointer-events-none',
             )}
             aria-label={isPlaying ? '暂停' : '播放'}
+            tabIndex={showExpanded ? 0 : -1}
           >
             {isPlaying ? (
-              <Pause size={18} className="fill-current" />
+              <Pause size={13} className="fill-current" />
             ) : (
-              <Play size={18} className="ml-0.5 fill-current" />
+              <Play size={13} className="ml-px fill-current" />
             )}
           </button>
         </div>
-      </Glass>
+      </div>
     </div>
   );
 };

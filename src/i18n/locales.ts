@@ -41,6 +41,8 @@ export const messages = {
         'Shared Rsbuild configuration package supporting React targets. Layered config factory with hot reload, proxy, and environment injection.',
       projectDesign:
         'Component dependency management and version tracking for internal packages used across projects.',
+      linksTitle: 'Related Links',
+      linkFlacMusic: 'Lossless Music Download',
     },
     projects: {
       title: 'Projects',
@@ -169,6 +171,8 @@ export const messages = {
       projectToolchain:
         '共享 Rsbuild 配置包，支持 React 目标，提供分层配置、热更新与代理注入。',
       projectDesign: '内部包的组件依赖管理与版本追踪。',
+      linksTitle: '相关链接',
+      linkFlacMusic: '无损音乐下载',
     },
     projects: {
       title: '项目',
