@@ -9,6 +9,8 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useTiltHover } from '../hooks/useTiltHover';
 import { cn } from '../lib/cn';
 
+const CONTACT_EMAIL = 'sxl5253999Xl@gmail.com';
+
 function SkillCard({
   label,
   desc,
@@ -108,6 +110,37 @@ export const About = () => {
         <div className="pt-6" data-animate style={{ opacity: 0 }}>
           <h2 className="mb-4 text-xl font-medium text-foreground">{t('about.contactTitle')}</h2>
           <p className="leading-relaxed text-foreground/70">{t('about.contactBody')}</p>
+
+          <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="group flex items-center gap-3 rounded-xl border border-border bg-white/40 px-4 py-3 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/25 hover:shadow-md dark:bg-white/8"
+            >
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/15">
+                <Mail className="size-4" aria-hidden />
+              </span>
+              <div>
+                <div className="text-xs text-foreground/45">{t('about.emailLabel')}</div>
+                <div className="text-sm font-medium text-foreground transition-colors group-hover:text-accent">
+                  {CONTACT_EMAIL}
+                </div>
+              </div>
+            </a>
+
+            <div className="rounded-xl border border-border bg-white/40 p-4 backdrop-blur-sm dark:bg-white/8 sm:shrink-0">
+              <div className="mb-3 text-xs text-foreground/45">{t('about.wechatLabel')}</div>
+              <img
+                src="/contact/wechat-qr.png"
+                alt={t('about.wechatHint')}
+                width={168}
+                height={168}
+                className="mx-auto rounded-lg"
+              />
+              <p className="mt-3 text-center text-xs leading-relaxed text-foreground/45">
+                {t('about.wechatHint')}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

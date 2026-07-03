@@ -170,7 +170,7 @@ export const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className="fixed inset-x-0 top-0 z-50 opacity-0 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.5rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))] sm:pr-[max(3.5rem,calc(env(safe-area-inset-right)+2.5rem))]"
+      className="fixed inset-x-0 top-0 z-50 opacity-0 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.5rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))] sm:pr-[max(9rem,calc(env(safe-area-inset-right)+8rem))]"
     >
       <div className="mx-auto flex w-full min-w-0 max-w-5xl justify-center">
         <Glass

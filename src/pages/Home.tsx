@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import { animate, stagger } from 'animejs';
 import { usePreferences } from '../context/PreferencesContext';
 import { useParallaxScroll } from '../hooks/useParallaxScroll';
@@ -6,6 +6,7 @@ import { MusicPlayer } from '../components/music/MusicPlayer';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
 import { SkillSection } from '../components/skill/SkillSection';
+import { relatedLinks } from '../data/related-links';
 
 let heroIntroPlayed = false;
 
@@ -87,12 +88,33 @@ export const Home = () => {
       </AnimatedSection>
 
       <AnimatedSection className="mb-16">
-        <h2 className="mb-8 text-2xl font-light text-foreground">Featured Work</h2>
+        <h2 className="mb-8 text-2xl font-light text-foreground">{t('home.featuredTitle')}</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {featuredProjects.map((project) => (
             <ProjectCard key={project.title} {...project} />
           ))}
         </div>
+      </AnimatedSection>
+
+      <AnimatedSection className="pt-4">
+        <p className="text-sm text-foreground/45" data-animate style={{ opacity: 0 }}>
+          {t('home.linksTitle')}
+        </p>
+        <p className="mt-2 text-sm" data-animate style={{ opacity: 0 }}>
+          {relatedLinks.map((link, index) => (
+            <Fragment key={link.id}>
+              {index > 0 ? <span className="mx-3 text-foreground/20">/</span> : null}
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground/55 underline-offset-4 transition-colors hover:text-accent hover:underline"
+              >
+                {t(link.labelKey)}
+              </a>
+            </Fragment>
+          ))}
+        </p>
       </AnimatedSection>
     </>
   );

@@ -2,7 +2,7 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-07-01T14:04:14.201Z",
+  "syncedAt": "2026-07-03T03:22:23.940Z",
   "activeWithinDays": 180,
   "projects": [
     {
@@ -11,7 +11,7 @@
       "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/crawler-media",
-      "pushedAt": "2026-06-30T23:31:15+08:00"
+      "pushedAt": "2026-07-02T21:04:39+08:00"
     },
     {
       "id": "init_project",
