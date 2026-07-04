@@ -43,6 +43,10 @@ export const messages = {
         'Component dependency management and version tracking for internal packages used across projects.',
       linksTitle: 'Related Links',
       linkFlacMusic: 'Lossless Music Download',
+      bookHermesAgent: 'Hermes-Agent Orange Book 2.0',
+      pdfPreview: 'Preview',
+      pdfDownload: 'Download',
+      pdfClose: 'Close',
     },
     projects: {
       title: 'Projects',
@@ -173,6 +177,10 @@ export const messages = {
       projectDesign: '内部包的组件依赖管理与版本追踪。',
       linksTitle: '相关链接',
       linkFlacMusic: '无损音乐下载',
+      bookHermesAgent: 'Hermes-Agent 橙皮书 2.0',
+      pdfPreview: '预览',
+      pdfDownload: '下载',
+      pdfClose: '关闭',
     },
     projects: {
       title: '项目',

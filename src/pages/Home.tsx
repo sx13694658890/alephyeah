@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { animate, stagger } from 'animejs';
 import { usePreferences } from '../context/PreferencesContext';
 import { useParallaxScroll } from '../hooks/useParallaxScroll';
@@ -6,6 +6,8 @@ import { MusicPlayer } from '../components/music/MusicPlayer';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
 import { SkillSection } from '../components/skill/SkillSection';
+import { PdfPreviewModal } from '../components/documents/PdfPreviewModal';
+import { relatedBooks } from '../data/related-books';
 import { relatedLinks } from '../data/related-links';
 
 let heroIntroPlayed = false;
@@ -13,6 +15,9 @@ let heroIntroPlayed = false;
 export const Home = () => {
   const { t } = usePreferences();
   const heroParallaxRef = useParallaxScroll<HTMLDivElement>({ speed: 0.12, maxOffset: 40 });
+  const [previewBookId, setPreviewBookId] = useState<string | null>(null);
+
+  const previewBook = relatedBooks.find((book) => book.id === previewBookId) ?? null;
 
   const featuredProjects = [
     {
@@ -115,7 +120,47 @@ export const Home = () => {
             </Fragment>
           ))}
         </p>
+
+        {relatedBooks.length > 0 ? (
+          <div className="mt-4 space-y-2" data-animate style={{ opacity: 0 }}>
+            {relatedBooks.map((book) => (
+              <p key={book.id} className="text-sm">
+                <button
+                  type="button"
+                  onClick={() => setPreviewBookId(book.id)}
+                  className="text-foreground/55 underline-offset-4 transition-colors hover:text-accent hover:underline"
+                >
+                  {t(book.titleKey)}
+                </button>
+                <span className="mx-2 text-foreground/20">·</span>
+                <button
+                  type="button"
+                  onClick={() => setPreviewBookId(book.id)}
+                  className="text-foreground/45 transition-colors hover:text-accent"
+                >
+                  {t('home.pdfPreview')}
+                </button>
+                <span className="mx-2 text-foreground/20">·</span>
+                <a
+                  href={book.src}
+                  download={book.fileName}
+                  className="text-foreground/45 transition-colors hover:text-accent hover:underline"
+                >
+                  {t('home.pdfDownload')}
+                </a>
+              </p>
+            ))}
+          </div>
+        ) : null}
       </AnimatedSection>
+
+      <PdfPreviewModal
+        open={previewBook !== null}
+        title={previewBook ? t(previewBook.titleKey) : ''}
+        src={previewBook?.src ?? ''}
+        fileName={previewBook?.fileName ?? ''}
+        onClose={() => setPreviewBookId(null)}
+      />
     </>
   );
 };
