@@ -48,6 +48,9 @@ export const messages = {
       pdfDownload: 'Download',
       pdfClose: 'Close',
     },
+    book: {
+      back: 'Back to Home',
+    },
     projects: {
       title: 'Projects',
       subtitle: "Things I've built, contributed to, or spent too much time thinking about.",
@@ -181,6 +184,9 @@ export const messages = {
       pdfPreview: '预览',
       pdfDownload: '下载',
       pdfClose: '关闭',
+    },
+    book: {
+      back: '返回首页',
     },
     projects: {
       title: '项目',

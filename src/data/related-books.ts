@@ -13,3 +13,6 @@ export const relatedBooks: RelatedBook[] = [
     fileName: 'Hermes-Agent橙皮书2.0-v260607.pdf',
   },
 ];
+
+export const getBookById = (id: string | undefined): RelatedBook | undefined =>
+  relatedBooks.find((book) => book.id === id);

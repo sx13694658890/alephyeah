@@ -6,6 +6,7 @@ import { Projects } from './pages/Projects';
 import { Documents } from './pages/Documents';
 import { Dependencies } from './pages/Dependencies';
 import { About } from './pages/About';
+import { BookPreviewPage } from './pages/BookPreviewPage';
 import { FireworksPage } from './pages/FireworksPage';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/documents" element={<Documents />} />
             <Route path="/dependencies" element={<Dependencies />} />
             <Route path="/about" element={<About />} />
+            <Route path="/books/:bookId" element={<BookPreviewPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
