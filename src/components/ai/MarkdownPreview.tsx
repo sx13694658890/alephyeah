@@ -7,6 +7,7 @@ const INLINE_FILE_RE = /(`?)([\w./-]+\.(?:md|markdown|yaml|yml|json|txt))\1/g;
 const TABLE_ROW_RE = /^\|.+\|$/;
 const TABLE_SEPARATOR_RE = /^\|[\s\-:|]+\|$/;
 const INLINE_FORMAT_RE = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+const MD_LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
 
 interface MarkdownPreviewProps {
   content: string;
@@ -59,7 +60,7 @@ const renderFileReferences = (text: string, onOpenReference?: (path: string) => 
   return parts.length === 1 ? parts[0] : <>{parts}</>;
 };
 
-const renderFormattedInline = (
+const renderFormattedBoldAndCode = (
   text: string,
   onOpenReference?: (path: string) => void,
 ): ReactNode => {
@@ -100,6 +101,44 @@ const renderFormattedInline = (
 
   if (lastIndex < text.length) {
     parts.push(renderFileReferences(text.slice(lastIndex), onOpenReference));
+  }
+
+  return parts.length === 1 ? parts[0] : <>{parts}</>;
+};
+
+const renderFormattedInline = (
+  text: string,
+  onOpenReference?: (path: string) => void,
+): ReactNode => {
+  if (!MD_LINK_RE.test(text)) {
+    return renderFormattedBoldAndCode(text, onOpenReference);
+  }
+
+  MD_LINK_RE.lastIndex = 0;
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = MD_LINK_RE.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(renderFormattedBoldAndCode(text.slice(lastIndex, match.index), onOpenReference));
+    }
+    parts.push(
+      <a
+        key={`l-${match.index}`}
+        href={match[2]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-accent underline decoration-accent/35 underline-offset-2 transition-colors hover:text-accent/80"
+      >
+        {match[1]}
+      </a>,
+    );
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(renderFormattedBoldAndCode(text.slice(lastIndex), onOpenReference));
   }
 
   return parts.length === 1 ? parts[0] : <>{parts}</>;
@@ -204,6 +243,19 @@ const renderLine = (
   }
   if (line.trim() === '---') {
     return <hr key={index} className="my-4 border-border" />;
+  }
+  if (line.startsWith('> ')) {
+    return (
+      <blockquote
+        key={index}
+        className="border-l-2 border-accent/25 pl-3 text-sm text-foreground/55"
+      >
+        {renderFormattedInline(line.slice(2), onOpenReference)}
+      </blockquote>
+    );
+  }
+  if (line.trim().startsWith('<')) {
+    return null;
   }
   if (line.startsWith('```')) {
     return null;

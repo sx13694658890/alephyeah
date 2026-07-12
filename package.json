@@ -10,7 +10,8 @@
     "dev": "rsbuild dev",
     "dev:rsbuild": "rsbuild dev",
     "sync:projects": "node scripts/sync-gitee-projects.mjs",
-    "prebuild": "pnpm sync:projects",
+    "sync:daily": "node scripts/sync-daily-summary.mjs",
+    "prebuild": "pnpm sync:projects && pnpm sync:daily",
     "build": "rsbuild build",
     "build:rsbuild": "rsbuild build",
     "deploy:cloudflare": "rsbuild build && wrangler pages deploy dist --project-name alephyeah"

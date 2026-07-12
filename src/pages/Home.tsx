@@ -7,6 +7,7 @@ import { MusicPlayer } from '../components/music/MusicPlayer';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
 import { SkillSection } from '../components/skill/SkillSection';
+import { TodayNewsSection } from '../components/home/TodayNewsSection';
 import { relatedBooks } from '../data/related-books';
 import { relatedLinks } from '../data/related-links';
 
@@ -63,9 +64,9 @@ export const Home = () => {
     <>
       <MusicPlayer />
 
-      <section className="mb-32 min-h-[65vh]">
-        <div ref={heroParallaxRef} className="mx-auto max-w-2xl pt-16 text-center">
-          <h1 className="hero-title mb-6 text-4xl font-light tracking-tight text-foreground md:text-5xl">
+      <section className="mb-24 md:mb-32">
+        <div ref={heroParallaxRef} className="mx-auto max-w-2xl pt-12 text-center md:pt-16">
+          <h1 className="hero-title mb-6 text-4xl font-light tracking-tight text-foreground md:mb-8 md:text-5xl">
             <span className="inline-block opacity-0">{t('home.heroHello')}</span>{' '}
             <span className="inline-block opacity-0">{t('home.heroIm')}</span>{' '}
             <span className="inline-block font-normal text-accent opacity-0">{t('home.heroName')}</span>
@@ -74,9 +75,11 @@ export const Home = () => {
             {t('home.heroSubtitle')}
           </p>
         </div>
+
+        <TodayNewsSection className="mt-16 md:mt-24" />
       </section>
 
-      <AnimatedSection className="mb-24" delay={80}>
+      <AnimatedSection className="mb-28 md:mb-32" delay={80}>
         <h2 className="mb-3 text-2xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
           {t('home.aboutTitle')}
         </h2>

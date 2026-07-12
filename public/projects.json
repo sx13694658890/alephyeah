@@ -2,16 +2,16 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-07-04T14:46:20.985Z",
+  "syncedAt": "2026-07-12T00:36:30.652Z",
   "activeWithinDays": 180,
   "projects": [
     {
-      "id": "codex-orange-book",
-      "title": "codex-orange-book",
-      "description": "Codex 橙皮书：从安装到实战案例的全链路使用指南",
+      "id": "ai_colaction_data",
+      "title": "ai_colaction_data",
+      "description": "",
       "tags": [],
-      "href": "https://gitee.com/codeing-rz/codex-orange-book",
-      "pushedAt": "2026-07-04T22:25:13+08:00"
+      "href": "https://gitee.com/codeing-rz/ai_colaction_data",
+      "pushedAt": "2026-07-10T17:37:12+08:00"
     },
     {
       "id": "crawler-media",
@@ -19,7 +19,15 @@
       "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/crawler-media",
-      "pushedAt": "2026-07-03T12:11:52+08:00"
+      "pushedAt": "2026-07-08T22:27:07+08:00"
+    },
+    {
+      "id": "codex-orange-book",
+      "title": "codex-orange-book",
+      "description": "Codex 橙皮书：从安装到实战案例的全链路使用指南",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/codex-orange-book",
+      "pushedAt": "2026-07-04T22:25:13+08:00"
     },
     {
       "id": "init_project",
