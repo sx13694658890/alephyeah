@@ -1,5 +1,6 @@
 /**
  * 构建时将 data/summary-zh.md 同步到 public/daily/summary-zh.md
+ * 源文件由 `pnpm crawl:daily` 从 Horizon pipeline 生成，或手动维护
  */
 import { copyFile, mkdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
