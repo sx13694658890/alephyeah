@@ -1,0 +1,270 @@
+/* Chip resume CTA — warm theme + clear clickable affordance */
+
+.chip-resume {
+  display: block;
+  width: min(100%, 17.5rem);
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chip-resume:focus-visible .chip-resume__card {
+  border-color: color-mix(in oklab, var(--color-accent) 50%, transparent);
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 4px color-mix(in oklab, var(--color-accent) 45%, transparent);
+}
+
+.chip-resume__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1rem 0.95rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  background: color-mix(in oklab, white 55%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px rgba(45, 42, 36, 0.04);
+  transition:
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    background-color 0.45s ease;
+}
+
+.chip-resume:hover .chip-resume__card,
+.chip-resume:focus-visible .chip-resume__card {
+  border-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  background: color-mix(in oklab, white 72%, transparent);
+  box-shadow:
+    0 14px 32px rgba(45, 42, 36, 0.1),
+    0 0 0 1px color-mix(in oklab, var(--color-accent) 12%, transparent);
+}
+
+.chip-resume__eyebrow {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-foreground) 42%, transparent);
+}
+
+.chip-resume__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 48%, rgba(154, 139, 122, 0.12), transparent 68%),
+    color-mix(in oklab, var(--color-muted) 55%, white);
+}
+
+.chip-resume__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chip-resume:hover .chip-resume__svg {
+  transform: scale(1.03);
+}
+
+.chip-resume__trace-bg {
+  stroke: color-mix(in oklab, var(--color-border) 70%, var(--color-foreground));
+  stroke-width: 1.8;
+  fill: none;
+  opacity: 0.55;
+}
+
+.chip-resume__trace-flow {
+  stroke-width: 1.9;
+  fill: none;
+  stroke-dasharray: 34 400;
+  stroke-dashoffset: 434;
+  opacity: 0.9;
+  animation: chip-resume-flow 3.4s cubic-bezier(0.45, 0, 0.85, 1) infinite;
+}
+
+.chip-resume__trace-flow.is-sand {
+  stroke: #c4b5a5;
+}
+
+.chip-resume__trace-flow.is-clay {
+  stroke: #9a8b7a;
+}
+
+.chip-resume__trace-flow.is-olive {
+  stroke: #8a9278;
+}
+
+.chip-resume__trace-flow.is-stone {
+  stroke: #7a736c;
+}
+
+.chip-resume__trace-flow.is-umber {
+  stroke: #a89078;
+}
+
+.chip-resume__chip-body {
+  filter: drop-shadow(0 6px 14px rgba(45, 42, 36, 0.22));
+  transition: filter 0.45s ease;
+}
+
+.chip-resume:hover .chip-resume__chip-body {
+  filter:
+    drop-shadow(0 8px 18px rgba(45, 42, 36, 0.28))
+    drop-shadow(0 0 12px rgba(154, 139, 122, 0.28));
+}
+
+.chip-resume__node {
+  fill: #4a4540;
+  stroke: #9a8b7a;
+  stroke-width: 1;
+}
+
+.chip-resume__chip-cta {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6.5rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, #2d2a24 92%, white);
+  border: 1px solid color-mix(in oklab, #f5f0ea 18%, transparent);
+  box-shadow:
+    0 8px 18px rgba(45, 42, 36, 0.28),
+    inset 0 1px 0 rgba(245, 240, 234, 0.12);
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease,
+    background-color 0.45s ease;
+}
+
+.chip-resume:hover .chip-resume__chip-cta {
+  transform: translate(-50%, -52%) scale(1.04);
+  background: #2d2a24;
+  box-shadow:
+    0 10px 22px rgba(45, 42, 36, 0.34),
+    0 0 0 1px rgba(154, 139, 122, 0.35),
+    inset 0 1px 0 rgba(245, 240, 234, 0.16);
+}
+
+.chip-resume__chip-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #f5f0ea;
+  white-space: nowrap;
+}
+
+.chip-resume__footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.chip-resume__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  transition: color 0.35s ease;
+}
+
+.chip-resume:hover .chip-resume__action {
+  color: var(--color-accent);
+}
+
+.chip-resume__action-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chip-resume:hover .chip-resume__action-icon {
+  transform: translate(2px, -2px);
+}
+
+.chip-resume__hint {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in oklab, var(--color-foreground) 40%, transparent);
+  transition: color 0.35s ease;
+}
+
+.chip-resume:hover .chip-resume__hint {
+  color: color-mix(in oklab, var(--color-accent) 85%, transparent);
+}
+
+@keyframes chip-resume-flow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chip-resume {
+    width: min(100%, 18.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-resume,
+  .chip-resume__card,
+  .chip-resume__svg,
+  .chip-resume__chip-cta,
+  .chip-resume__action,
+  .chip-resume__action-icon,
+  .chip-resume__hint,
+  .chip-resume__trace-flow {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+html.dark .chip-resume__card {
+  background: color-mix(in oklab, white 8%, transparent);
+}
+
+html.dark .chip-resume:hover .chip-resume__card {
+  background: color-mix(in oklab, white 12%, transparent);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .chip-resume__stage {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 48%, rgba(196, 181, 165, 0.12), transparent 68%),
+    color-mix(in oklab, var(--color-muted) 80%, black);
+}
+
+html.dark .chip-resume__chip-cta {
+  background: color-mix(in oklab, #f5f0ea 92%, black);
+  border-color: color-mix(in oklab, #2d2a24 12%, transparent);
+}
+
+html.dark .chip-resume__chip-label {
+  color: #2d2a24;
+}
+
+html.dark .chip-resume:hover .chip-resume__chip-cta {
+  background: #f5f0ea;
+}
+
+html.dark .chip-resume__node {
+  fill: #c4b5a5;
+  stroke: #9a8b7a;
+}

@@ -3,6 +3,7 @@ import { Mail } from 'lucide-react';
 
 import { DocumentModal } from '../components/documents/DocumentModal';
 import { EffectsShowcase } from '../components/effects/EffectsShowcase';
+import { ChipResumeLoader } from '../components/chip-resume';
 import { usePreferences } from '../context/PreferencesContext';
 import { rsbuildDocument } from '../docs/rsbuild';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -10,6 +11,8 @@ import { useTiltHover } from '../hooks/useTiltHover';
 import { cn } from '../lib/cn';
 
 const CONTACT_EMAIL = 'sxl5253999Xl@gmail.com';
+const RESUME_URL =
+  'https://docs.google.com/document/d/1MbqTskEq0-hDixtXQRzfULYQ6WByzjhw/view';
 
 function SkillCard({
   label,
@@ -86,61 +89,72 @@ export const About = () => {
         </h1>
       </div>
 
-      <div ref={contentRef} className="max-w-2xl space-y-6">
-        <p className="text-lg leading-relaxed text-foreground/70" data-animate style={{ opacity: 0 }}>
-          {t('about.p1')}
-        </p>
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+        <div ref={contentRef} className="max-w-2xl flex-1 space-y-6">
+          <p className="text-lg leading-relaxed text-foreground/70" data-animate style={{ opacity: 0 }}>
+            {t('about.p1')}
+          </p>
 
-        <p className="text-lg leading-relaxed text-foreground/70" data-animate style={{ opacity: 0 }}>
-          {t('about.p2')}
-        </p>
+          <p className="text-lg leading-relaxed text-foreground/70" data-animate style={{ opacity: 0 }}>
+            {t('about.p2')}
+          </p>
 
-        <h2 className="pt-6 text-xl font-medium text-foreground" data-animate style={{ opacity: 0 }}>
-          {t('about.skillsTitle')}
-        </h2>
+          <h2 className="pt-6 text-xl font-medium text-foreground" data-animate style={{ opacity: 0 }}>
+            {t('about.skillsTitle')}
+          </h2>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          {skills.map((skill) => (
-            <SkillCard key={skill.label} {...skill} />
-          ))}
-        </div>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {skills.map((skill) => (
+              <SkillCard key={skill.label} {...skill} />
+            ))}
+          </div>
 
-        <EffectsShowcase />
+          <EffectsShowcase />
 
-        <div className="pt-6" data-animate style={{ opacity: 0 }}>
-          <h2 className="mb-4 text-xl font-medium text-foreground">{t('about.contactTitle')}</h2>
-          <p className="leading-relaxed text-foreground/70">{t('about.contactBody')}</p>
+          <div className="pt-6" data-animate style={{ opacity: 0 }}>
+            <h2 className="mb-4 text-xl font-medium text-foreground">{t('about.contactTitle')}</h2>
+            <p className="leading-relaxed text-foreground/70">{t('about.contactBody')}</p>
 
-          <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="group flex items-center gap-3 rounded-xl border border-border bg-white/40 px-4 py-3 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/25 hover:shadow-md dark:bg-white/8"
-            >
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/15">
-                <Mail className="size-4" aria-hidden />
-              </span>
-              <div>
-                <div className="text-xs text-foreground/45">{t('about.emailLabel')}</div>
-                <div className="text-sm font-medium text-foreground transition-colors group-hover:text-accent">
-                  {CONTACT_EMAIL}
+            <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="group flex items-center gap-3 rounded-xl border border-border bg-white/40 px-4 py-3 backdrop-blur-sm transition-[border-color,box-shadow] duration-500 hover:border-accent/25 hover:shadow-md dark:bg-white/8"
+              >
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/15">
+                  <Mail className="size-4" aria-hidden />
+                </span>
+                <div>
+                  <div className="text-xs text-foreground/45">{t('about.emailLabel')}</div>
+                  <div className="text-sm font-medium text-foreground transition-colors group-hover:text-accent">
+                    {CONTACT_EMAIL}
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
 
-            <div className="rounded-xl border border-border bg-white/40 p-4 backdrop-blur-sm dark:bg-white/8 sm:shrink-0">
-              <div className="mb-3 text-xs text-foreground/45">{t('about.wechatLabel')}</div>
-              <img
-                src="/contact/wechat-qr.png"
-                alt={t('about.wechatHint')}
-                width={168}
-                height={168}
-                className="mx-auto rounded-lg"
-              />
-              <p className="mt-3 text-center text-xs leading-relaxed text-foreground/45">
-                {t('about.wechatHint')}
-              </p>
+              <div className="rounded-xl border border-border bg-white/40 p-4 backdrop-blur-sm dark:bg-white/8 sm:shrink-0">
+                <div className="mb-3 text-xs text-foreground/45">{t('about.wechatLabel')}</div>
+                <img
+                  src="/contact/wechat-qr.png"
+                  alt={t('about.wechatHint')}
+                  width={168}
+                  height={168}
+                  className="mx-auto rounded-lg"
+                />
+                <p className="mt-3 text-center text-xs leading-relaxed text-foreground/45">
+                  {t('about.wechatHint')}
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div className="flex w-full shrink-0 justify-center pt-2 lg:sticky lg:top-28 lg:w-[min(100%,19rem)] lg:justify-end">
+          <ChipResumeLoader
+            resumeHref={RESUME_URL}
+            resumeLabel={t('home.viewResume')}
+            eyebrow={t('home.resumeEyebrow')}
+            hint={t('home.resumeHint')}
+          />
         </div>
       </div>
 

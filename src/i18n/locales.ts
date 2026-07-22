@@ -31,6 +31,11 @@ export const messages = {
       heroName: 'Aleph',
       heroSubtitle:
         'A space for projects, thoughts, and the tools I build along the way. Exploring the intersection of design, code, and craft.',
+      viewResume: 'View Resume',
+      openResume: 'Open lid',
+      closeResume: 'Close lid',
+      resumeHint: 'Click to view',
+      resumeEyebrow: 'Resume',
       aboutTitle: 'About This Space',
       aboutBody:
         'This is my personal corner of the web — a place to share what I am working on, document what I am learning, and keep track of the component ecosystem that powers my projects. Everything here is built with care and a touch of curiosity.',
@@ -174,6 +179,11 @@ export const messages = {
       heroName: 'Aleph',
       heroSubtitle:
         '记录项目、思考与工具搭建的个人空间。探索设计、代码与手作之间的交集。',
+      viewResume: '查看简历',
+      openResume: '打开盖子',
+      closeResume: '合上盖子',
+      resumeHint: '点击查看',
+      resumeEyebrow: '简历',
       aboutTitle: '关于这个空间',
       aboutBody:
         '这是我网络上的个人角落——分享正在做的事、记录学到的东西，并整理项目所用的组件生态。一切都带着一点用心与好奇。',

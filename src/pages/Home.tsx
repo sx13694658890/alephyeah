@@ -6,6 +6,7 @@ import { useParallaxScroll } from '../hooks/useParallaxScroll';
 import { MusicPlayer } from '../components/music/MusicPlayer';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ProjectCard } from '../components/ProjectCard';
+import { RetroTv } from '../components/retro-tv';
 import { SkillSection } from '../components/skill/SkillSection';
 import { TodayNewsSection } from '../components/home/TodayNewsSection';
 import { relatedBooks } from '../data/related-books';
@@ -66,15 +67,24 @@ export const Home = () => {
       <MusicPlayer />
 
       <section className="mb-24 md:mb-32">
-        <div ref={heroParallaxRef} className="mx-auto max-w-2xl pt-12 text-center md:pt-16">
-          <h1 className="hero-title mb-6 text-4xl font-light tracking-tight text-foreground md:mb-8 md:text-5xl">
-            <span className="inline-block opacity-0">{t('home.heroHello')}</span>{' '}
-            <span className="inline-block opacity-0">{t('home.heroIm')}</span>{' '}
-            <span className="inline-block font-normal text-accent opacity-0">{t('home.heroName')}</span>
-          </h1>
-          <p className="hero-subtitle mx-auto max-w-lg text-lg leading-relaxed text-foreground/60 opacity-0">
-            {t('home.heroSubtitle')}
-          </p>
+        <div
+          ref={heroParallaxRef}
+          className="flex flex-col items-center gap-6 pt-8 md:pt-12 lg:flex-row lg:items-center lg:justify-between lg:gap-4"
+        >
+          <div className="order-2 flex w-full shrink-0 justify-center lg:order-1 lg:w-[min(42%,18rem)] xl:w-[min(44%,20rem)]">
+            <RetroTv className="-my-6" />
+          </div>
+
+          <div className="order-1 mx-auto max-w-xl text-center lg:order-2 lg:mx-0 lg:flex-1 lg:text-left">
+            <h1 className="hero-title mb-6 text-4xl font-light tracking-tight text-foreground md:mb-8 md:text-5xl">
+              <span className="inline-block opacity-0">{t('home.heroHello')}</span>{' '}
+              <span className="inline-block opacity-0">{t('home.heroIm')}</span>{' '}
+              <span className="inline-block font-normal text-accent opacity-0">{t('home.heroName')}</span>
+            </h1>
+            <p className="hero-subtitle mx-auto max-w-lg text-lg leading-relaxed text-foreground/60 opacity-0 lg:mx-0">
+              {t('home.heroSubtitle')}
+            </p>
+          </div>
         </div>
 
         <TodayNewsSection className="mt-16 md:mt-24" />

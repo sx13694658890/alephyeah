@@ -1,0 +1,541 @@
+/* From Uiverse.io by Praashoo7 — scoped under .retro-tv */
+/* Design Inspired by one of Stefan Devai's Design on Dribbble */
+
+.retro-tv {
+  --rtv-orange: #f27405;
+  --rtv-orange-mid: #d36604;
+  --rtv-orange-light: #e69635;
+  --rtv-orange-pale: #f69e50;
+  --rtv-orange-deep: #a85103;
+  --rtv-brown: #7f5934;
+  --rtv-brown-light: #b49577;
+  --rtv-brown-deep: #513721;
+  --rtv-ink: #1d0e01;
+  --rtv-black: #171717;
+  --rtv-gray: #4d4d4d;
+  --rtv-knob: #979797;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30em;
+  height: 30em;
+  max-width: 100%;
+  font-size: clamp(0.42rem, 1.35vw, 0.62rem);
+  pointer-events: none;
+  user-select: none;
+}
+
+.retro-tv .main_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30em;
+  height: 30em;
+}
+
+.retro-tv .main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5em;
+}
+
+.retro-tv .antenna {
+  position: relative;
+  width: 5em;
+  height: 5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: var(--rtv-orange);
+  margin-bottom: -6em;
+  margin-left: 0;
+  z-index: -1;
+}
+
+.retro-tv .antenna_shadow {
+  position: absolute;
+  background-color: transparent;
+  width: 50px;
+  height: 56px;
+  margin-left: 1.68em;
+  border-radius: 45%;
+  transform: rotate(140deg);
+  border: 4px solid transparent;
+  box-shadow:
+    inset 0px 16px var(--rtv-orange-deep),
+    inset 0px 16px 1px 1px var(--rtv-orange-deep);
+}
+
+.retro-tv .antenna::after {
+  content: '';
+  position: absolute;
+  margin-top: -9.4em;
+  margin-left: 0.4em;
+  transform: rotate(-25deg);
+  width: 1em;
+  height: 0.5em;
+  border-radius: 50%;
+  background-color: var(--rtv-orange-pale);
+}
+
+.retro-tv .antenna::before {
+  content: '';
+  position: absolute;
+  margin-top: 0.2em;
+  margin-left: 1.25em;
+  transform: rotate(-20deg);
+  width: 1.5em;
+  height: 0.8em;
+  border-radius: 50%;
+  background-color: var(--rtv-orange-pale);
+}
+
+.retro-tv .a1 {
+  position: relative;
+  top: -102%;
+  left: -130%;
+  width: 12em;
+  height: 5.5em;
+  border-radius: 50px;
+  background-image: linear-gradient(
+    var(--rtv-black),
+    var(--rtv-black),
+    #353535,
+    #353535,
+    var(--rtv-black)
+  );
+  transform: rotate(-29deg);
+  clip-path: polygon(50% 0%, 49% 100%, 52% 100%);
+}
+
+.retro-tv .a1d {
+  position: relative;
+  top: -211%;
+  left: -35%;
+  transform: rotate(45deg);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: var(--rtv-knob);
+  z-index: 99;
+}
+
+.retro-tv .a2 {
+  position: relative;
+  top: -210%;
+  left: -10%;
+  width: 12em;
+  height: 4em;
+  border-radius: 50px;
+  background-image: linear-gradient(
+    var(--rtv-black),
+    var(--rtv-black),
+    #353535,
+    #353535,
+    var(--rtv-black)
+  );
+  margin-right: 5em;
+  clip-path: polygon(47% 0, 47% 0, 34% 34%, 54% 25%, 32% 100%, 29% 96%, 49% 32%, 30% 38%);
+  transform: rotate(-8deg);
+}
+
+.retro-tv .a2d {
+  position: relative;
+  top: -294%;
+  left: 94%;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  border: 2px solid black;
+  background-color: var(--rtv-knob);
+  z-index: 99;
+}
+
+.retro-tv .notfound_text {
+  background-color: black;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  font-size: 0.75em;
+  color: white;
+  letter-spacing: 0;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.retro-tv .tv {
+  position: relative;
+  width: 17em;
+  height: 9em;
+  margin-top: 3em;
+  border-radius: 15px;
+  background-color: var(--rtv-orange-mid);
+  display: flex;
+  justify-content: center;
+  border: 2px solid var(--rtv-ink);
+  box-shadow: inset 0.2em 0.2em var(--rtv-orange-light);
+}
+
+.retro-tv .tv::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  background:
+    repeating-radial-gradient(var(--rtv-orange-mid) 0 0.0001%, #00000070 0 0.0002%) 50% 0 / 2500px
+      2500px,
+    repeating-conic-gradient(var(--rtv-orange-mid) 0 0.0001%, #00000070 0 0.0002%) 60% 60% / 2500px
+      2500px;
+  background-blend-mode: difference;
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+.retro-tv .cruve {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.retro-tv .curve_svg {
+  position: absolute;
+  margin-top: 0.25em;
+  margin-left: -0.25em;
+  height: 12px;
+  width: 12px;
+}
+
+.retro-tv .display_div {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 3.5px 3.5px 0px var(--rtv-orange-light);
+}
+
+.retro-tv .screen_out {
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+}
+
+.retro-tv .screen_out1 {
+  width: 11em;
+  height: 7.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.retro-tv .screen {
+  width: 13em;
+  height: 7.85em;
+  font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
+  border: 2px solid var(--rtv-ink);
+  background:
+    repeating-radial-gradient(#000 0 0.0001%, #ffffff 0 0.0002%) 50% 0 / 2500px 2500px,
+    repeating-conic-gradient(#000 0 0.0001%, #ffffff 0 0.0002%) 60% 60% / 2500px 2500px;
+  background-blend-mode: difference;
+  animation: retro-tv-static 0.2s infinite alternate;
+  border-radius: 10px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #252525;
+  letter-spacing: 0.15em;
+  text-align: center;
+}
+
+.retro-tv .screenM {
+  width: 13em;
+  height: 7.85em;
+  position: relative;
+  font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
+  background: linear-gradient(
+    to right,
+    #002fc6 0%,
+    #002bb2 14.2857142857%,
+    #3a3a3a 14.2857142857%,
+    #303030 28.5714285714%,
+    #ff0afe 28.5714285714%,
+    #f500f4 42.8571428571%,
+    #6c6c6c 42.8571428571%,
+    #626262 57.1428571429%,
+    #0affd9 57.1428571429%,
+    #00f5ce 71.4285714286%,
+    #3a3a3a 71.4285714286%,
+    #303030 85.7142857143%,
+    white 85.7142857143%,
+    #fafafa 100%
+  );
+  border-radius: 10px;
+  border: 2px solid black;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #252525;
+  letter-spacing: 0.15em;
+  text-align: center;
+  overflow: hidden;
+}
+
+.retro-tv .screenM::before,
+.retro-tv .screenM::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+.retro-tv .screenM::before {
+  top: 0;
+  height: 68.4782608696%;
+  background: linear-gradient(
+    to right,
+    white 0%,
+    #fafafa 14.2857142857%,
+    #ffe60a 14.2857142857%,
+    #f5dc00 28.5714285714%,
+    #0affd9 28.5714285714%,
+    #00f5ce 42.8571428571%,
+    #10ea00 42.8571428571%,
+    #0ed600 57.1428571429%,
+    #ff0afe 57.1428571429%,
+    #f500f4 71.4285714286%,
+    #ed0014 71.4285714286%,
+    #d90012 85.7142857143%,
+    #002fc6 85.7142857143%,
+    #002bb2 100%
+  );
+}
+
+.retro-tv .screenM::after {
+  bottom: 0;
+  height: 21.7391304348%;
+  background: linear-gradient(
+    to right,
+    #006c6b 0%,
+    #005857 16.6666666667%,
+    white 16.6666666667%,
+    #fafafa 33.3333333333%,
+    #001b75 33.3333333333%,
+    #001761 50%,
+    #6c6c6c 50%,
+    #626262 66.6666666667%,
+    #929292 66.6666666667%,
+    #888888 83.3333333333%,
+    #3a3a3a 83.3333333333%,
+    #303030 100%
+  );
+}
+
+@keyframes retro-tv-static {
+  100% {
+    background-position:
+      50% 0,
+      60% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retro-tv .screen {
+    animation: none;
+  }
+}
+
+.retro-tv .lines {
+  display: flex;
+  column-gap: 0.1em;
+  align-self: flex-end;
+}
+
+.retro-tv .line1,
+.retro-tv .line3 {
+  width: 2px;
+  height: 0.5em;
+  background-color: black;
+  border-radius: 25px 25px 0 0;
+  margin-top: 0.5em;
+}
+
+.retro-tv .line2 {
+  flex-grow: 1;
+  width: 2px;
+  height: 1em;
+  background-color: black;
+  border-radius: 25px 25px 0 0;
+}
+
+.retro-tv .buttons_div {
+  position: relative;
+  width: 4.25em;
+  align-self: center;
+  height: 8em;
+  background-color: var(--rtv-orange-light);
+  border: 2px solid var(--rtv-ink);
+  padding: 0.6em;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 0.75em;
+  box-shadow: 3px 3px 0 var(--rtv-orange-light);
+}
+
+.retro-tv .b1,
+.retro-tv .b2 {
+  position: relative;
+  width: 1.65em;
+  height: 1.65em;
+  border-radius: 50%;
+  background-color: var(--rtv-brown);
+  border: 2px solid black;
+  box-shadow:
+    inset 2px 2px 1px var(--rtv-brown-light),
+    -2px 0 var(--rtv-brown-deep),
+    -2px 0 0 1px black;
+}
+
+.retro-tv .b1::before {
+  content: '';
+  position: absolute;
+  margin-top: 1em;
+  margin-left: 0.5em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.4em;
+  background-color: #000;
+}
+
+.retro-tv .b1::after {
+  content: '';
+  position: absolute;
+  margin-top: 0.9em;
+  margin-left: 0.8em;
+  transform: rotate(47deg);
+  border-radius: 5px;
+  width: 0.1em;
+  height: 0.55em;
+  background-color: #000;
+}
+
+.retro-tv .b1 div {
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: #000;
+}
+
+.retro-tv .b2::before {
+  content: '';
+  position: absolute;
+  margin-top: 1.05em;
+  margin-left: 0.8em;
+  transform: rotate(-45deg);
+  border-radius: 5px;
+  width: 0.15em;
+  height: 0.4em;
+  background-color: #000;
+}
+
+.retro-tv .b2::after {
+  content: '';
+  position: absolute;
+  margin-top: -0.1em;
+  margin-left: 0.65em;
+  transform: rotate(-45deg);
+  width: 0.15em;
+  height: 1.5em;
+  background-color: #000;
+}
+
+.retro-tv .speakers {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
+}
+
+.retro-tv .speakers .g1 {
+  display: flex;
+  column-gap: 0.25em;
+}
+
+.retro-tv .speakers .g1 .g11,
+.retro-tv .speakers .g1 .g12,
+.retro-tv .speakers .g1 .g13 {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background-color: var(--rtv-brown);
+  border: 2px solid black;
+  box-shadow: inset 1.25px 1.25px 1px var(--rtv-brown-light);
+}
+
+.retro-tv .speakers .g {
+  width: auto;
+  height: 2px;
+  background-color: var(--rtv-black);
+}
+
+.retro-tv .bottom {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8.7em;
+}
+
+.retro-tv .base1,
+.retro-tv .base2 {
+  height: 1em;
+  width: 2em;
+  border: 2px solid var(--rtv-black);
+  background-color: var(--rtv-gray);
+  margin-top: -0.15em;
+  z-index: -1;
+}
+
+.retro-tv .base3 {
+  position: absolute;
+  height: 0.15em;
+  width: 17.5em;
+  background-color: var(--rtv-black);
+  margin-top: 0.8em;
+}
+
+@media only screen and (max-width: 1024px) {
+  .retro-tv .screenM {
+    display: flex;
+  }
+
+  .retro-tv .screen {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .retro-tv .screen {
+    display: flex;
+  }
+
+  .retro-tv .screenM {
+    display: none;
+  }
+}
