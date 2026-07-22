@@ -1,5 +1,6 @@
 import antiCrawlerBasics from './anti-crawler-basics.md';
 import engineeringSpec from './engineering-spec.md';
+import horizonDailyReport from './horizon-daily-report.md';
 import playwrightNetworkInterception from './playwright-network-interception.md';
 import proxyBanMechanism from './proxy-ban-mechanism.md';
 import proxyIpManagement from './proxy-ip-management.md';
@@ -9,6 +10,15 @@ import type { ProjectDocument } from '../types';
 export type CrawlerDocument = ProjectDocument;
 
 export const crawlerDocuments: CrawlerDocument[] = [
+  {
+    id: 'horizon-daily-report',
+    title: 'Horizon 抓取日报',
+    description:
+      '多源抓取 → AI 打分/去重/富化 → Markdown 日报；含配置、pnpm 命令与首页展示链路说明。',
+    date: '2026',
+    category: 'Technical',
+    content: horizonDailyReport,
+  },
   {
     id: 'anti-crawler-basics',
     title: '反爬虫基础对抗',

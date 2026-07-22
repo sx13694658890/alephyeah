@@ -11,6 +11,8 @@
     "dev:rsbuild": "rsbuild dev",
     "sync:projects": "node scripts/sync-gitee-projects.mjs",
     "sync:daily": "node scripts/sync-daily-summary.mjs",
+    "crawl:daily": "node scripts/crawl-daily-report.mjs && node scripts/sync-daily-summary.mjs",
+    "crawl:daily:sync": "HORIZON_SKIP_CRAWL=1 node scripts/crawl-daily-report.mjs && node scripts/sync-daily-summary.mjs",
     "prebuild": "pnpm sync:projects && pnpm sync:daily",
     "build": "rsbuild build",
     "build:rsbuild": "rsbuild build",
