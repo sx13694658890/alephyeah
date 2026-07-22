@@ -22,12 +22,13 @@ export const Home = () => {
       title: 'alephyeah',
       description: t('home.projectAlephyeah'),
       tags: ['React', 'TypeScript', 'Rsbuild', 'Tailwind CSS'],
-      href: 'https://github.com/alephyeah',
+      href: 'https://github.com/sx13694658890/alephyeah',
     },
     {
-      title: 'Build Toolchain',
-      description: t('home.projectToolchain'),
-      tags: ['Rsbuild', 'Rspack', 'Monorepo'],
+      title: 'test_api',
+      description: t('home.projectTestApi'),
+      tags: ['FastAPI'],
+      href: 'https://gitee.com/codeing-rz/test_api',
     },
     {
       title: 'Design System',

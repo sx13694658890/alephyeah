@@ -37,8 +37,7 @@ export const messages = {
       featuredTitle: 'Featured Work',
       projectAlephyeah:
         'Personal blog and portfolio built with React, Rsbuild, and TypeScript. A curated space for projects, documentation, and component references.',
-      projectToolchain:
-        'Shared Rsbuild configuration package supporting React targets. Layered config factory with hot reload, proxy, and environment injection.',
+      projectTestApi: 'Product API service built with FastAPI.',
       projectDesign:
         'Component dependency management and version tracking for internal packages used across projects.',
       linksTitle: 'Related Links',
@@ -180,8 +179,7 @@ export const messages = {
       featuredTitle: '精选作品',
       projectAlephyeah:
         '基于 React、Rsbuild 与 TypeScript 的个人站点，汇集项目、文档与组件参考。',
-      projectToolchain:
-        '共享 Rsbuild 配置包，支持 React 目标，提供分层配置、热更新与代理注入。',
+      projectTestApi: '商品 API 服务（FastAPI）',
       projectDesign: '内部包的组件依赖管理与版本追踪。',
       linksTitle: '相关链接',
       linkFlacMusic: '无损音乐下载',
