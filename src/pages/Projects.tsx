@@ -21,7 +21,7 @@ export const Projects = () => {
     setLoading(true);
     setError(null);
     try {
-      const items = await loadProjects();
+      const items = await loadProjects({ force: true });
       setProjects(items);
     } catch (err) {
       setError(resolveProjectError(err));

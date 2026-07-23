@@ -2,9 +2,41 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-07-12T00:36:30.652Z",
+  "syncedAt": "2026-07-23T01:55:32.123Z",
   "activeWithinDays": 180,
   "projects": [
+    {
+      "id": "shaine_go",
+      "title": "shaine_go",
+      "description": "基于 Firebase Auth + Realtime Database 的 pnpm monorepo 演示应用：个人笔记、多人协同纯文本文档，以及可选的 DeepSeek 错误分析服务。前端为 Vite + React + Tailwind + shadcn/ui。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/shaine_go",
+      "pushedAt": "2026-07-23T09:49:49+08:00"
+    },
+    {
+      "id": "astryx",
+      "title": "astryx",
+      "description": "An open source design system that's fully customizable and built for how we build now — by people and the agents working alongside them.",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/astryx",
+      "pushedAt": "2026-07-22T12:23:09+08:00"
+    },
+    {
+      "id": "mini_uni",
+      "title": "mini_uni",
+      "description": "uni-app 基础框架模板，集成了常用的功能和配置，方便快速开发 uni-app 应用。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/mini_uni",
+      "pushedAt": "2026-07-16T16:58:21+08:00"
+    },
+    {
+      "id": "ai-goofish-monitor",
+      "title": "ai-goofish-monitor",
+      "description": "[中文] ｜ English",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/ai-goofish-monitor",
+      "pushedAt": "2026-07-14T15:04:47+08:00"
+    },
     {
       "id": "ai_colaction_data",
       "title": "ai_colaction_data",
@@ -36,14 +68,6 @@
       "tags": [],
       "href": "https://gitee.com/codeing-rz/init_project",
       "pushedAt": "2026-06-29T22:09:07+08:00"
-    },
-    {
-      "id": "mini_uni",
-      "title": "mini_uni",
-      "description": "uni-app 基础框架模板，集成了常用的功能和配置，方便快速开发 uni-app 应用。",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/mini_uni",
-      "pushedAt": "2026-06-26T18:06:56+08:00"
     },
     {
       "id": "maple",

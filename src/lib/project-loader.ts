@@ -24,8 +24,8 @@ export const resolveProjectError = (error: unknown): string => {
 
 let manifestCache: ProjectItem[] | null = null;
 
-export const loadProjects = async (): Promise<ProjectItem[]> => {
-  if (manifestCache) return manifestCache;
+export const loadProjects = async (options?: { force?: boolean }): Promise<ProjectItem[]> => {
+  if (!options?.force && manifestCache) return manifestCache;
 
   const response = await fetch('/projects.json', { cache: 'no-cache' });
   if (!response.ok) {

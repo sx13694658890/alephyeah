@@ -43,8 +43,8 @@ export const messages = {
       projectAlephyeah:
         'Personal blog and portfolio built with React, Rsbuild, and TypeScript. A curated space for projects, documentation, and component references.',
       projectTestApi: 'Product API service built with FastAPI.',
-      projectDesign:
-        'Component dependency management and version tracking for internal packages used across projects.',
+      projectShaineGo:
+        'Firebase Auth + Realtime Database monorepo demo: personal notes, collaborative docs, and optional DeepSeek error analysis.',
       linksTitle: 'Related Links',
       linkFlacMusic: 'Lossless Music Download',
       linkClaudeCodeTutorial: 'Claude Code Tutorial',
@@ -191,7 +191,8 @@ export const messages = {
       projectAlephyeah:
         '基于 React、Rsbuild 与 TypeScript 的个人站点，汇集项目、文档与组件参考。',
       projectTestApi: '商品 API 服务（FastAPI）',
-      projectDesign: '内部包的组件依赖管理与版本追踪。',
+      projectShaineGo:
+        '基于 Firebase Auth + Realtime Database 的演示应用：个人笔记、多人协同文档与 DeepSeek 错误分析。',
       linksTitle: '相关链接',
       linkFlacMusic: '无损音乐下载',
       linkClaudeCodeTutorial: 'Claude Code 教程',

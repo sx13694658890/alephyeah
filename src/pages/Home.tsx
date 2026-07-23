@@ -32,9 +32,10 @@ export const Home = () => {
       href: 'https://gitee.com/codeing-rz/test_api',
     },
     {
-      title: 'Design System',
-      description: t('home.projectDesign'),
-      tags: ['pnpm', 'Workspace', 'Private Registry'],
+      title: 'shaine_go',
+      description: t('home.projectShaineGo'),
+      tags: ['React', 'Firebase', 'Yjs'],
+      href: 'https://gitee.com/codeing-rz/shaine_go',
     },
   ];
 
