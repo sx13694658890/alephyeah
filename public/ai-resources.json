@@ -21,6 +21,13 @@
       "description": "打造有辨识度的生产级前端界面，避免模板化 AI 审美。",
       "category": "skills",
       "path": "/skills/frontend-design/SKILL.md"
+    },
+    {
+      "id": "RedBook-Copywriter",
+      "title": "RedBook-Copywriter",
+      "description": "一键生成符合小红书受众偏好的爆款图文文案（含标题、正文、标签与 Emoji）。",
+      "category": "skills",
+      "path": "/skills/RedBook-Copywriter/SKILL.md"
     }
   ]
 }

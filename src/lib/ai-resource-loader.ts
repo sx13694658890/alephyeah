@@ -54,8 +54,12 @@ interface AiResourceManifest {
   }>;
 }
 
-export const loadAiResourceManifest = async () => {
-  if (manifestCache) return manifestCache;
+export const clearAiResourceManifestCache = () => {
+  manifestCache = null;
+};
+
+export const loadAiResourceManifest = async (options?: { force?: boolean }) => {
+  if (!options?.force && manifestCache) return manifestCache;
 
   const raw = await fetchPublicText('/ai-resources.json');
   try {
@@ -65,7 +69,8 @@ export const loadAiResourceManifest = async () => {
     }
     manifestCache = data.resources;
     return manifestCache;
-  } catch {
+  } catch (error) {
+    if (error instanceof AiResourceLoadError) throw error;
     throw new AiResourceLoadError('manifest');
   }
 };

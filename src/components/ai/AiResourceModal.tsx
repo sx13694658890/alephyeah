@@ -46,7 +46,7 @@ export const AiResourceModal = ({ open, onClose, view }: AiResourceModalProps) =
     setListLoading(true);
     setListError(null);
     try {
-      const resources = await loadAiResourceManifest();
+      const resources = await loadAiResourceManifest({ force: true });
       setAllResources(resources);
     } catch (error) {
       setListError(resolveAiResourceError(error));
