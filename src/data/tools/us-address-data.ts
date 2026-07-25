@@ -8,6 +8,9 @@ export interface USAddress {
   zipCode: string;
   phone: string;
   email: string;
+  occupation: string;
+  gender: string;
+  birthDate: string;
   country: string;
 }
 
@@ -158,10 +161,34 @@ export function generatePhone(): string {
 }
 
 export function generateEmail(firstName: string, lastName: string): string {
-  const domains = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'hotmail.com'];
+  const domains = ['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com', 'hotmail.com', 'example.com'];
   const n = generateRandomNumber(10, 99);
-  const local = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${n}`;
+  const local = `${firstName.toLowerCase()}${lastName.toLowerCase()}${n}`;
   return `${local}@${pickRandom(domains)}`;
+}
+
+export const OCCUPATIONS = [
+  'Data Analyst', 'Software Engineer', 'Product Manager', 'Designer', 'Teacher',
+  'Accountant', 'Nurse', 'Marketing Specialist', 'Sales Representative', 'Consultant',
+  'Project Manager', 'Researcher', 'Architect', 'Lawyer', 'Doctor',
+  'Writer', 'Photographer', 'Chef', 'Entrepreneur', 'Student',
+];
+
+export function generateOccupation(): string {
+  return pickRandom(OCCUPATIONS);
+}
+
+export function generateGender(): string {
+  return pickRandom(['Male', 'Female']);
+}
+
+export function generateBirthDate(minAge = 22, maxAge = 65): string {
+  const now = new Date();
+  const age = generateRandomNumber(minAge, maxAge);
+  const year = now.getFullYear() - age;
+  const month = generateRandomNumber(1, 12);
+  const day = generateRandomNumber(1, 28);
+  return `${year}/${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
 }
 
 export function generateAddress(options?: { state?: string; city?: string }): USAddress {
@@ -218,6 +245,9 @@ export function generateAddress(options?: { state?: string; city?: string }): US
     zipCode,
     phone,
     email,
+    occupation: generateOccupation(),
+    gender: generateGender(),
+    birthDate: generateBirthDate(),
     country: 'United States',
   };
 }
@@ -238,6 +268,9 @@ export function formatAddressAsText(addr: USAddress): string {
     addr.country,
     `Phone: ${addr.phone}`,
     `Email: ${addr.email}`,
+    `Occupation: ${addr.occupation}`,
+    `Gender: ${addr.gender}`,
+    `DOB: ${addr.birthDate}`,
   ].join('\n');
 }
 

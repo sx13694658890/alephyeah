@@ -15,10 +15,10 @@ export interface ToolDefinition {
 export const tools: ToolDefinition[] = [
   {
     id: 'us-address',
-    title: 'US Address Generator',
-    titleZh: '美国地址生成器',
-    description: 'Generate random US addresses with names, phone numbers, and ZIP codes.',
-    descriptionZh: '随机生成美国地址、姓名、电话和邮编，支持免税州地址。',
+    title: 'Address Generator',
+    titleZh: '地址生成器',
+    description: 'Generate addresses for 20+ countries with copy, save, and tax-free US states.',
+    descriptionZh: '支持 20+ 国家随机地址、一键复制与本地保存，美国含免税州。',
     icon: MapPin,
     href: '/tools/us-address',
     category: 'generator',
