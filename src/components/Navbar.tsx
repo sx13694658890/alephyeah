@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { animate } from 'animejs';
+import { BookOpen, Wrench } from 'lucide-react';
 import { usePreferences } from '../context/PreferencesContext';
 import { Glass } from './ul-liquid-glass';
 import { cn } from '../lib/cn';
@@ -20,7 +21,8 @@ const navGlassOptics = {
   dispersion: 0.35,
 };
 
-const navLinks = [
+/** 主导航：滚动指示器只跟踪这些路由 */
+const primaryLinks = [
   { to: '/', labelKey: 'nav.home', shortKey: 'nav.homeShort' },
   { to: '/projects', labelKey: 'nav.projects', shortKey: 'nav.projectsShort' },
   { to: '/documents', labelKey: 'nav.documents', shortKey: 'nav.documentsShort' },
@@ -35,8 +37,12 @@ const updateIndicator = (
   scrollActive = false,
 ) => {
   const activeLink = navEl.querySelector(`a[href="${pathname}"]`);
-  if (!activeLink || !(activeLink instanceof HTMLElement)) return;
+  if (!activeLink || !(activeLink instanceof HTMLElement)) {
+    indicatorEl.style.opacity = '0';
+    return;
+  }
 
+  indicatorEl.style.opacity = '1';
   const navRect = navEl.getBoundingClientRect();
   const rect = activeLink.getBoundingClientRect();
   indicatorEl.style.left = `${rect.left - navRect.left}px`;
@@ -47,7 +53,7 @@ const updateIndicator = (
   }
 };
 
-/** 仅负责链接文案，语言切换时只重渲染此层，不带动导航外壳与玻璃层 */
+/** 仅负责主链文案与指示器 */
 const NavTrack = memo(function NavTrack({
   pathname,
   navRef,
@@ -106,26 +112,24 @@ const NavTrack = memo(function NavTrack({
   return (
     <div
       ref={trackRef}
-      className="relative flex min-w-min items-center justify-center gap-0.5 px-2 py-2"
+      className="relative flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto overscroll-x-contain px-1.5 py-1.5 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden"
     >
       <div
         ref={indicatorRef}
-        className="absolute bottom-2 top-2 rounded-full bg-gradient-to-b from-white/70 to-accent/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_1px_3px_rgba(154,139,122,0.15)] transition-[left,width] duration-500 ease-out dark:from-white/20 dark:to-accent/30"
+        className="pointer-events-none absolute bottom-1.5 top-1.5 rounded-full bg-linear-to-b from-white/70 to-accent/25 opacity-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_1px_3px_rgba(154,139,122,0.15)] transition-[left,width,opacity] duration-500 ease-out dark:from-white/20 dark:to-accent/30"
         style={{ width: 0, left: 0 }}
       />
-      {navLinks.map(({ to, labelKey, shortKey }) => {
+      {primaryLinks.map(({ to, labelKey, shortKey }) => {
         const active = pathname === to;
         return (
           <Link
             key={to}
             to={to}
             className={cn(
-              'relative z-10 flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full px-3 text-sm font-medium sm:px-4',
+              'relative z-10 flex min-h-10 shrink-0 items-center justify-center rounded-full px-3 text-sm font-medium sm:min-h-11 sm:px-3.5',
               'transition-colors duration-300 ease-out active:scale-[0.97]',
-              'motion-safe:sm:hover:scale-[1.04]',
-              active
-                ? 'text-foreground'
-                : 'text-foreground/50 sm:hover:text-foreground/90',
+              'motion-safe:sm:hover:scale-[1.03]',
+              active ? 'text-foreground' : 'text-foreground/50 sm:hover:text-foreground/90',
             )}
           >
             <span className="sm:hidden">{t(shortKey)}</span>
@@ -133,6 +137,60 @@ const NavTrack = memo(function NavTrack({
           </Link>
         );
       })}
+    </div>
+  );
+});
+
+const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
+  pathname,
+}: {
+  pathname: string;
+}) {
+  const { t, locale } = usePreferences();
+  const isZh = locale === 'zh';
+  const knowledgeActive = pathname === '/knowledge-base' || pathname.startsWith('/knowledge-base/');
+  const toolsActive = pathname === '/tools' || pathname.startsWith('/tools/');
+
+  return (
+    <div
+      role="group"
+      aria-label={isZh ? '知识库与工具' : 'Knowledge and tools'}
+      className={cn(
+        'flex shrink-0 items-center rounded-full border border-border/70 bg-background p-1',
+        'shadow-[0_1px_2px_rgba(45,42,36,0.05)]',
+      )}
+    >
+      <Link
+        to="/knowledge-base"
+        aria-current={knowledgeActive ? 'page' : undefined}
+        className={cn(
+          'relative z-10 flex min-h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium sm:min-h-10 sm:px-3.5',
+          'transition-[color,background-color,box-shadow,transform] duration-300 ease-out',
+          'active:scale-[0.97]',
+          knowledgeActive
+            ? 'bg-muted text-foreground shadow-sm'
+            : 'text-foreground/55 hover:text-foreground/90',
+        )}
+      >
+        <BookOpen className="h-3.5 w-3.5 opacity-70" aria-hidden />
+        <span className="sm:hidden">{t('nav.knowledgeBaseShort')}</span>
+        <span className="hidden sm:inline">{t('nav.knowledgeBase')}</span>
+      </Link>
+      <Link
+        to="/tools"
+        aria-current={toolsActive ? 'page' : undefined}
+        className={cn(
+          'relative z-10 flex min-h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium sm:min-h-10 sm:px-3.5',
+          'transition-[color,background-color,box-shadow,transform] duration-300 ease-out',
+          'active:scale-[0.97]',
+          toolsActive
+            ? 'bg-muted text-foreground shadow-sm'
+            : 'text-foreground/55 hover:text-foreground/90',
+        )}
+      >
+        <Wrench className="h-3.5 w-3.5 opacity-70" aria-hidden />
+        <span>{isZh ? '工具' : 'Tools'}</span>
+      </Link>
     </div>
   );
 });
@@ -170,14 +228,14 @@ export const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className="fixed inset-x-0 top-0 z-50 opacity-0 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.5rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))] sm:pr-[max(9rem,calc(env(safe-area-inset-right)+8rem))]"
+      className="fixed inset-x-0 top-0 z-50 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.5rem))] opacity-0 sm:pr-[max(9rem,calc(env(safe-area-inset-right)+8rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))]"
     >
       <div className="mx-auto flex w-full min-w-0 max-w-5xl justify-center">
         <Glass
           className={cn(
-            'nav-scroll nav-glass w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain sm:w-fit sm:max-w-[calc(100vw-4rem)]',
-            'rounded-[2rem]',
-            'border border-white/65 bg-gradient-to-b from-white/55 via-white/38 to-white/22',
+            'nav-scroll nav-glass w-full min-w-0 max-w-full overflow-visible sm:w-auto sm:max-w-[calc(100vw-4rem)]',
+            'rounded-[1.75rem] px-1.5 py-1',
+            'border border-white/65 bg-linear-to-b from-white/55 via-white/38 to-white/22',
             'shadow-[0_10px_40px_rgba(45,42,36,0.1),0_2px_8px_rgba(45,42,36,0.06),inset_0_1px_0_rgba(255,255,255,0.75)]',
             'ring-1 ring-accent/20',
             'dark:border-white/12 dark:from-white/14 dark:via-white/8 dark:to-white/4',
@@ -185,9 +243,21 @@ export const Navbar = () => {
             'dark:ring-white/10',
           )}
           optics={navGlassOptics}
-          radius={32}
+          radius={28}
         >
-          <NavTrack pathname={location.pathname} navRef={navRef} />
+          {/* GlassMaterial 强制 inline-block，flex 必须放在内部容器 */}
+          <div className="flex w-full min-w-0 max-w-full flex-row items-center gap-1">
+            <NavTrack pathname={location.pathname} navRef={navRef} />
+
+            <div
+              className="mx-0.5 hidden h-5 w-px shrink-0 bg-border/45 sm:block"
+              aria-hidden
+            />
+
+            <div className="flex shrink-0 items-center pr-1">
+              <KnowledgeToolsSegment pathname={location.pathname} />
+            </div>
+          </div>
         </Glass>
       </div>
     </nav>

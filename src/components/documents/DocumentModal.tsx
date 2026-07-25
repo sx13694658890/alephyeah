@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 
 import type { ProjectDocument } from '../../docs/types';
 import { cn } from '../../lib/cn';
@@ -9,10 +9,11 @@ import { MarkdownPreview } from '../ai/MarkdownPreview';
 interface DocumentModalProps {
   open: boolean;
   doc: ProjectDocument | null;
+  loading?: boolean;
   onClose: () => void;
 }
 
-export const DocumentModal = ({ open, doc, onClose }: DocumentModalProps) => {
+export const DocumentModal = ({ open, doc, loading = false, onClose }: DocumentModalProps) => {
   useEffect(() => {
     if (!open) return;
 
@@ -45,7 +46,7 @@ export const DocumentModal = ({ open, doc, onClose }: DocumentModalProps) => {
 
       <div
         className={cn(
-          'relative z-10 flex w-full min-h-0 flex-col overflow-hidden',
+          'relative z-10 flex min-h-0 w-full flex-col overflow-hidden',
           'max-h-full rounded-t-3xl border border-border/60 bg-background shadow-2xl',
           'sm:max-h-[min(82vh,820px)] sm:max-w-3xl sm:rounded-3xl',
         )}
@@ -59,7 +60,7 @@ export const DocumentModal = ({ open, doc, onClose }: DocumentModalProps) => {
               <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
                 {doc.category}
               </span>
-              <span className="text-xs text-foreground/40">{doc.date}</span>
+              {doc.date ? <span className="text-xs text-foreground/40">{doc.date}</span> : null}
             </div>
             <h2 id="document-modal-title" className="truncate text-base font-semibold text-foreground">
               {doc.title}
@@ -76,7 +77,14 @@ export const DocumentModal = ({ open, doc, onClose }: DocumentModalProps) => {
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-5">
-          <MarkdownPreview content={doc.content} />
+          {loading ? (
+            <div className="flex min-h-40 flex-col items-center justify-center gap-2 text-foreground/45">
+              <Loader2 className="h-5 w-5 animate-spin text-accent" />
+              <span className="text-sm">加载中…</span>
+            </div>
+          ) : (
+            <MarkdownPreview content={doc.content} />
+          )}
         </div>
       </div>
     </div>,

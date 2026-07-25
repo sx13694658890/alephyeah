@@ -7,6 +7,10 @@ import { Documents } from './pages/Documents';
 import { Dependencies } from './pages/Dependencies';
 import { About } from './pages/About';
 import { BookPreviewPage } from './pages/BookPreviewPage';
+import { USAddressGenerator } from './pages/Tools/USAddressGenerator';
+import { AppleIdShared } from './pages/Tools/AppleIdShared';
+import { ToolsIndex } from './pages/Tools/ToolsIndex';
+import { KnowledgeBase } from './pages/KnowledgeBase';
 import { FireworksPage } from './pages/FireworksPage';
 
 const App = () => {
@@ -22,6 +26,10 @@ const App = () => {
             <Route path="/dependencies" element={<Dependencies />} />
             <Route path="/about" element={<About />} />
             <Route path="/books/:bookId" element={<BookPreviewPage />} />
+            <Route path="/tools" element={<ToolsIndex />} />
+            <Route path="/tools/us-address" element={<USAddressGenerator />} />
+            <Route path="/tools/apple-id-shared" element={<AppleIdShared />} />
+            <Route path="/knowledge-base" element={<KnowledgeBase />} />
           </Route>
         </Routes>
       </BrowserRouter>

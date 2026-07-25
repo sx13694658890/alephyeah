@@ -15,6 +15,8 @@ export const messages = {
       documentsShort: 'Docs',
       dependenciesShort: 'Deps',
       aboutShort: 'About',
+      knowledgeBase: 'Knowledge Base',
+      knowledgeBaseShort: 'KB',
       main: 'Main navigation',
     },
     settings: {
@@ -163,6 +165,8 @@ export const messages = {
       documentsShort: '文档',
       dependenciesShort: '依赖',
       aboutShort: '关于',
+      knowledgeBase: '知识库',
+      knowledgeBaseShort: '知识库',
       main: '主导航',
     },
     settings: {

@@ -10,6 +10,13 @@ export default async () =>
       appName: 'AlephYeah',
       port: 3076,
       proxy: {
+        '/api/apple-id-shared': {
+          target: 'https://fanqiangnan.com',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api/apple-id-shared': '/data_sync.php',
+          },
+        },
         '/api': {
           target: 'http://localhost:3000',
         },
