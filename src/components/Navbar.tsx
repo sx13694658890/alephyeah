@@ -1,7 +1,15 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { animate } from 'animejs';
-import { BookOpen, Wrench } from 'lucide-react';
+import { BookOpen, Ellipsis, Wrench } from 'lucide-react';
 import { usePreferences } from '../context/PreferencesContext';
 import { Glass } from './ul-liquid-glass';
 import { cn } from '../lib/cn';
@@ -173,8 +181,7 @@ const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
         )}
       >
         <BookOpen className="h-3.5 w-3.5 opacity-70" aria-hidden />
-        <span className="sm:hidden">{t('nav.knowledgeBaseShort')}</span>
-        <span className="hidden sm:inline">{t('nav.knowledgeBase')}</span>
+        <span>{t('nav.knowledgeBase')}</span>
       </Link>
       <Link
         to="/tools"
@@ -191,6 +198,111 @@ const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
         <Wrench className="h-3.5 w-3.5 opacity-70" aria-hidden />
         <span>{isZh ? '工具' : 'Tools'}</span>
       </Link>
+    </div>
+  );
+});
+
+/** 移动端：侧边小图标展开知识库 / 工具，避免挤占主导航 */
+const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
+  pathname,
+}: {
+  pathname: string;
+}) {
+  const { t, locale } = usePreferences();
+  const isZh = locale === 'zh';
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const knowledgeActive = pathname === '/knowledge-base' || pathname.startsWith('/knowledge-base/');
+  const toolsActive = pathname === '/tools' || pathname.startsWith('/tools/');
+  const anyActive = knowledgeActive || toolsActive;
+
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    close();
+  }, [pathname, close]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+    };
+    const onPointer = (e: MouseEvent | TouchEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) close();
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('touchstart', onPointer, { passive: true });
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('touchstart', onPointer);
+    };
+  }, [open, close]);
+
+  return (
+    <div ref={rootRef} className="relative shrink-0">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-label={isZh ? '知识库与工具' : 'Knowledge and tools'}
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          'flex h-10 w-10 items-center justify-center rounded-full',
+          'transition-[color,background-color,transform] duration-300 ease-out active:scale-[0.95]',
+          open || anyActive
+            ? 'bg-muted text-foreground shadow-sm'
+            : 'text-foreground/55',
+        )}
+      >
+        <Ellipsis className="h-4 w-4" aria-hidden />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className={cn(
+            'absolute right-0 top-full z-50 mt-2 min-w-[10.5rem]',
+            'rounded-2xl border border-border bg-background p-1.5',
+            'shadow-[0_12px_40px_rgba(45,42,36,0.14),0_2px_8px_rgba(45,42,36,0.08)]',
+            'dark:shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
+          )}
+        >
+          <Link
+            role="menuitem"
+            to="/knowledge-base"
+            onClick={close}
+            aria-current={knowledgeActive ? 'page' : undefined}
+            className={cn(
+              'flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm font-medium',
+              'transition-colors duration-200',
+              knowledgeActive
+                ? 'bg-muted text-foreground'
+                : 'text-foreground/70 active:bg-muted/70',
+            )}
+          >
+            <BookOpen className="h-4 w-4 opacity-70" aria-hidden />
+            <span>{t('nav.knowledgeBase')}</span>
+          </Link>
+          <Link
+            role="menuitem"
+            to="/tools"
+            onClick={close}
+            aria-current={toolsActive ? 'page' : undefined}
+            className={cn(
+              'flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm font-medium',
+              'transition-colors duration-200',
+              toolsActive
+                ? 'bg-muted text-foreground'
+                : 'text-foreground/70 active:bg-muted/70',
+            )}
+          >
+            <Wrench className="h-4 w-4 opacity-70" aria-hidden />
+            <span>{isZh ? '工具' : 'Tools'}</span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 });
@@ -246,7 +358,7 @@ export const Navbar = () => {
           radius={28}
         >
           {/* GlassMaterial 强制 inline-block，flex 必须放在内部容器 */}
-          <div className="flex w-full min-w-0 max-w-full flex-row items-center gap-1">
+          <div className="flex w-full min-w-0 max-w-full flex-row items-center gap-0.5 sm:gap-1">
             <NavTrack pathname={location.pathname} navRef={navRef} />
 
             <div
@@ -254,7 +366,11 @@ export const Navbar = () => {
               aria-hidden
             />
 
-            <div className="flex shrink-0 items-center pr-1">
+            {/* 移动端：旁侧 … 图标展开；桌面：完整分段控件 */}
+            <div className="flex shrink-0 items-center pr-0.5 sm:hidden">
+              <KnowledgeToolsMobileMenu pathname={location.pathname} />
+            </div>
+            <div className="hidden shrink-0 items-center pr-1 sm:flex">
               <KnowledgeToolsSegment pathname={location.pathname} />
             </div>
           </div>
