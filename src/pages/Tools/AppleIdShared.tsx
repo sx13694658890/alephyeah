@@ -350,14 +350,67 @@ const STEPS = [
   },
 ] as const;
 
+const SCENARIOS = [
+  {
+    icon: '🤖',
+    titleZh: 'AI 应用',
+    titleEn: 'AI Apps',
+    descZh: 'ChatGPT、Midjourney 等 AI 工具仅在美区上架',
+    descEn: 'ChatGPT, Midjourney — US store only',
+  },
+  {
+    icon: '🎮',
+    titleZh: '海外游戏',
+    titleEn: 'Gaming',
+    descZh: '大量优质游戏中国区未引进，需美区下载',
+    descEn: 'Great games exclusive to the US store',
+  },
+  {
+    icon: '📺',
+    titleZh: '流媒体',
+    titleEn: 'Streaming',
+    descZh: 'HBO Max、Peacock 等流媒体有专属 App',
+    descEn: 'HBO Max, Peacock — dedicated apps',
+  },
+  {
+    icon: '🌐',
+    titleZh: '社交工具',
+    titleEn: 'Social',
+    descZh: '海外社交平台官方客户端仅在美区提供',
+    descEn: 'Official overseas social apps on US store',
+  },
+] as const;
+
+const TESTIMONIALS = [
+  {
+    nameZh: '小王',
+    nameEn: 'Alex',
+    textZh: '按照教程操作，一次就成功了，ChatGPT Plus 美区订阅无障碍。',
+    textEn: 'Followed the guide and got ChatGPT Plus working on first try.',
+  },
+  {
+    nameZh: 'Lisa',
+    nameEn: 'Lisa',
+    textZh: '之前一直自己注册失败，这里直接拿现成的用太方便了。',
+    textEn: 'Had trouble registering myself. This saved so much time.',
+  },
+  {
+    nameZh: '阿杰',
+    nameEn: 'Jay',
+    textZh: '换了一批账号才找到可用的，好在免费的还要什么自行车。',
+    textEn: 'Had to try a few accounts but found a working one eventually. Great for free.',
+  },
+] as const;
+
 export const AppleIdShared = () => {
   const titleRef = useScrollAnimation<HTMLDivElement>({ staggerDelay: 80 });
   const { locale } = usePreferences();
   const isZh = locale === 'zh';
   const { copiedField, copy } = useCopy();
 
+  const [showAccounts, setShowAccounts] = useState(false);
   const [accounts, setAccounts] = useState<AppleIdAccount[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [regionFilter, setRegionFilter] = useState('all');
@@ -376,10 +429,6 @@ export const AppleIdShared = () => {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
 
   const regions = useMemo(() => {
     const map = new Map<string, string>();
@@ -413,123 +462,220 @@ export const AppleIdShared = () => {
 
   return (
     <>
-      <div ref={titleRef} className="mb-8">
-        <div className="mb-3 flex items-center gap-2 text-accent" data-animate style={{ opacity: 0 }}>
-          <Apple className="h-5 w-5" />
-          <span className="text-xs font-medium uppercase tracking-[0.16em]">
-            {isZh ? '工具' : 'Tool'}
-          </span>
-        </div>
-        <h1 className="mb-3 text-3xl font-light text-foreground" data-animate style={{ opacity: 0 }}>
-          {isZh ? '美区 Apple ID 共享' : 'Shared US Apple ID'}
-        </h1>
-        <p className="max-w-2xl text-foreground/60" data-animate style={{ opacity: 0 }}>
-          {isZh
-            ? '仅展示可用账号；密码默认隐藏。配合保姆级 App Store 切换教程，仅用于临时下载海外应用。'
-            : 'Available accounts only; passwords masked by default. Temporary App Store downloads — never iCloud.'}
-        </p>
-      </div>
+      {/* Hero CTA — visible before clicking */}
+      {!showAccounts ? (
+        <div className="relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D2A24] to-[#1A1814] px-6 py-12 sm:px-12 sm:py-16">
+          {/* Decorative glows */}
+          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-accent/5 blur-3xl" />
 
-      <div className="mb-8 flex gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/8 px-4 py-3.5 text-sm text-rose-900 dark:text-rose-100">
-        <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-300" />
-        <div>
-          <div className="mb-1 font-medium">
-            {isZh ? '高危警告' : 'Critical warning'}
-          </div>
-          <p className="text-rose-900/80 dark:text-rose-100/80">
-            {isZh
-              ? '请勿使用共享 Apple ID 登录 iCloud 或系统「设置」。错误操作可能导致锁机，并连累整个账号池。只在 App Store 内登录。'
-              : 'Do not sign into iCloud or system Settings with a shared Apple ID. That can lock the device and burn the pool. App Store only.'}
-          </p>
-        </div>
-      </div>
+          <div className="relative">
+            {/* Badge */}
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
+                <Apple className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-xs font-medium uppercase tracking-[0.16em] text-white/50">
+                {isZh ? '免费工具' : 'Free Tool'}
+              </span>
+            </div>
 
-      <section className="mb-12">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-lg font-medium text-foreground">
-              {isZh ? '实时共享账号' : 'Live shared accounts'}
-            </h2>
-            <p className="text-sm text-foreground/50">
+            {/* Title */}
+            <h1 className="mb-4 max-w-3xl text-4xl font-light leading-tight text-white sm:text-5xl">
+              {isZh ? '2026 最新免费美区 Apple ID 共享' : '2026 Free Shared US Apple ID'}
+            </h1>
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-white/55">
               {isZh
-                ? `可用 ${filtered.length} 个 · 第 ${safePage + 1}/${pageCount} 批`
-                : `${filtered.length} available · batch ${safePage + 1}/${pageCount}`}
+                ? '无需自己注册，一键获取可用账号。仅用于 App Store 下载海外应用，请勿登录 iCloud。'
+                : 'No registration needed. Get working accounts instantly. App Store downloads only — never sign into iCloud.'}
+            </p>
+
+            {/* CTA Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowAccounts(true);
+                void load();
+              }}
+              className="inline-flex items-center gap-3 rounded-2xl bg-white px-8 py-4 text-[15px] font-semibold text-[#2D2A24] shadow-xl transition-all hover:brightness-95 active:scale-[0.98]"
+            >
+              <Apple className="h-5 w-5" />
+              {isZh ? '立即获取美区账号' : 'Get US Account Now'}
+            </button>
+
+            {/* Status hint */}
+            <div className="mt-6 flex items-center gap-2 text-sm text-white/40">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10">
+                <Check className="h-3 w-3 text-white/60" />
+              </div>
+              <span>
+                {isZh ? '实时更新 · 免费使用' : 'Live updates · Free to use'}
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Scenario cards — visible before clicking */}
+      {!showAccounts ? (
+        <section className="mb-12">
+          <h2 className="mb-5 text-lg font-medium text-foreground">
+            {isZh ? '为什么需要美区 Apple ID？' : 'Why a US Apple ID?'}
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {SCENARIOS.map((s) => (
+              <div
+                key={s.titleEn}
+                className="rounded-2xl border border-border bg-background p-4 transition-colors hover:border-accent/30"
+              >
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-lg">
+                  {s.icon}
+                </div>
+                <h3 className="mb-1 text-sm font-medium text-foreground">
+                  {isZh ? s.titleZh : s.titleEn}
+                </h3>
+                <p className="text-xs leading-relaxed text-foreground/60">
+                  {isZh ? s.descZh : s.descEn}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* Testimonials — visible before clicking */}
+      {!showAccounts ? (
+        <section className="mb-12">
+          <h2 className="mb-5 text-lg font-medium text-foreground">
+            {isZh ? '用户评价' : 'User reviews'}
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <div
+                key={t.nameEn}
+                className="rounded-2xl border border-border bg-background p-4"
+              >
+                <p className="mb-3 text-sm leading-relaxed text-foreground/70">
+                  &ldquo;{isZh ? t.textZh : t.textEn}&rdquo;
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/15 text-xs font-medium text-accent">
+                    {isZh ? t.nameZh[0] : t.nameEn[0]}
+                  </div>
+                  <span className="text-xs text-foreground/50">
+                    {isZh ? t.nameZh : t.nameEn}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {showAccounts ? (
+        <div className="mb-8 flex gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/8 px-4 py-3.5 text-sm text-rose-900 dark:text-rose-100">
+          <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-300" />
+          <div>
+            <div className="mb-1 font-medium">
+              {isZh ? '高危警告' : 'Critical warning'}
+            </div>
+            <p className="text-rose-900/80 dark:text-rose-100/80">
+              {isZh
+                ? '请勿使用共享 Apple ID 登录 iCloud 或系统「设置」。错误操作可能导致锁机，并连累整个账号池。只在 App Store 内登录。'
+                : 'Do not sign into iCloud or system Settings with a shared Apple ID. That can lock the device and burn the pool. App Store only.'}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <RegionFilter
-              value={regionFilter}
-              options={regions}
-              isZh={isZh}
-              onChange={(next) => {
-                setRegionFilter(next);
-                setPage(0);
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => void load()}
-              disabled={loading}
-              className={cn(
-                'inline-flex min-h-11 items-center gap-2 rounded-2xl border border-border bg-background px-3.5 text-sm',
-                'hover:border-accent/40 hover:bg-accent/5 disabled:opacity-50',
-              )}
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-              {isZh ? '刷新' : 'Refresh'}
-            </button>
-            <button
-              type="button"
-              onClick={nextBatch}
-              disabled={filtered.length <= PAGE_SIZE}
-              className={cn(
-                'inline-flex min-h-11 items-center gap-2 rounded-2xl bg-accent px-3.5 text-sm font-medium text-white',
-                'hover:brightness-95 disabled:opacity-40',
-              )}
-            >
-              {isZh ? '换一批' : 'Next batch'}
-            </button>
-          </div>
         </div>
+      ) : null}
 
-        {error ? (
-          <div className="flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/8 px-4 py-4 text-sm">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+      {showAccounts ? (
+        <section className="mb-12">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <div className="font-medium text-foreground">{isZh ? '加载失败' : 'Failed to load'}</div>
-              <p className="text-foreground/60">{error}</p>
+              <h2 className="text-lg font-medium text-foreground">
+                {isZh ? '实时共享账号' : 'Live shared accounts'}
+              </h2>
+              <p className="text-sm text-foreground/50">
+                {isZh
+                  ? `可用 ${filtered.length} 个 · 第 ${safePage + 1}/${pageCount} 批`
+                  : `${filtered.length} available · batch ${safePage + 1}/${pageCount}`}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <RegionFilter
+                value={regionFilter}
+                options={regions}
+                isZh={isZh}
+                onChange={(next) => {
+                  setRegionFilter(next);
+                  setPage(0);
+                }}
+              />
               <button
                 type="button"
                 onClick={() => void load()}
-                className="mt-2 text-accent underline-offset-2 hover:underline"
+                disabled={loading}
+                className={cn(
+                  'inline-flex min-h-11 items-center gap-2 rounded-2xl border border-border bg-background px-3.5 text-sm',
+                  'hover:border-accent/40 hover:bg-accent/5 disabled:opacity-50',
+                )}
               >
-                {isZh ? '重试' : 'Retry'}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                {isZh ? '刷新' : 'Refresh'}
+              </button>
+              <button
+                type="button"
+                onClick={nextBatch}
+                disabled={filtered.length <= PAGE_SIZE}
+                className={cn(
+                  'inline-flex min-h-11 items-center gap-2 rounded-2xl bg-accent px-3.5 text-sm font-medium text-white',
+                  'hover:brightness-95 disabled:opacity-40',
+                )}
+              >
+                {isZh ? '换一批' : 'Next batch'}
               </button>
             </div>
           </div>
-        ) : loading && accounts.length === 0 ? (
-          <div className="flex min-h-40 items-center justify-center rounded-2xl border border-dashed border-border text-foreground/45">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {isZh ? '正在拉取账号…' : 'Fetching accounts…'}
-          </div>
-        ) : visible.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border px-4 py-10 text-center text-sm text-foreground/50">
-            {isZh ? '当前区服没有可用账号，试试切换区服或刷新。' : 'No available accounts for this region. Switch region or refresh.'}
-          </div>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {visible.map((account) => (
-              <AccountCard
-                key={account.id}
-                account={account}
-                copiedField={copiedField}
-                onCopy={copy}
-                isZh={isZh}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+
+          {error ? (
+            <div className="flex items-start gap-3 rounded-2xl border border-rose-500/30 bg-rose-500/8 px-4 py-4 text-sm">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+              <div>
+                <div className="font-medium text-foreground">{isZh ? '加载失败' : 'Failed to load'}</div>
+                <p className="text-foreground/60">{error}</p>
+                <button
+                  type="button"
+                  onClick={() => void load()}
+                  className="mt-2 text-accent underline-offset-2 hover:underline"
+                >
+                  {isZh ? '重试' : 'Retry'}
+                </button>
+              </div>
+            </div>
+          ) : loading && accounts.length === 0 ? (
+            <div className="flex min-h-40 items-center justify-center rounded-2xl border border-dashed border-border text-foreground/45">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {isZh ? '正在拉取账号…' : 'Fetching accounts…'}
+            </div>
+          ) : visible.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border px-4 py-10 text-center text-sm text-foreground/50">
+              {isZh ? '当前区服没有可用账号，试试切换区服或刷新。' : 'No available accounts for this region. Switch region or refresh.'}
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {visible.map((account) => (
+                <AccountCard
+                  key={account.id}
+                  account={account}
+                  copiedField={copiedField}
+                  onCopy={copy}
+                  isZh={isZh}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      ) : null}
 
       <section className="mb-12">
         <h2 className="mb-2 text-lg font-medium text-foreground">
