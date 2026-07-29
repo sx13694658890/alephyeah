@@ -78,7 +78,9 @@ export const messages = {
     dependencies: {
       title: 'Dependencies',
       subtitle:
-        'The component ecosystem and tools this project depends on — documented for easy reference.',
+        'Project dependencies plus useful tools and open-source finds worth bookmarking.',
+      discoveredTitle: 'Discovered Projects',
+      discoveredBadge: 'Find',
     },
     about: {
       title: 'About',
@@ -227,7 +229,9 @@ export const messages = {
     },
     dependencies: {
       title: '依赖',
-      subtitle: '本项目依赖的组件生态与工具，便于查阅。',
+      subtitle: '项目依赖，以及平时发现的好用开源项目，方便收藏查阅。',
+      discoveredTitle: '发现好物',
+      discoveredBadge: '发现',
     },
     about: {
       title: '关于',

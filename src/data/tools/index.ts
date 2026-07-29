@@ -1,4 +1,4 @@
-import { Apple, MapPin } from 'lucide-react';
+import { Apple, ImageIcon, MapPin } from 'lucide-react';
 import type { ComponentType } from 'react';
 
 export interface ToolDefinition {
@@ -32,6 +32,16 @@ export const tools: ToolDefinition[] = [
     icon: Apple,
     href: '/tools/apple-id-shared',
     category: 'account',
+  },
+  {
+    id: 'image-compress',
+    title: 'Image Compressor',
+    titleZh: '图片压缩',
+    description: 'Compress and resize images locally — quality, format, and dimensions.',
+    descriptionZh: '本地压缩与改尺寸，可调质量、格式与宽高，支持拖拽上传。',
+    icon: ImageIcon,
+    href: '/tools/image-compress',
+    category: 'utility',
   },
 ];
 

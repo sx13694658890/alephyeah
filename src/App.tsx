@@ -9,6 +9,7 @@ import { About } from './pages/About';
 import { BookPreviewPage } from './pages/BookPreviewPage';
 import { USAddressGenerator } from './pages/Tools/USAddressGenerator';
 import { AppleIdShared } from './pages/Tools/AppleIdShared';
+import { ImageCompressor } from './pages/Tools/ImageCompressor';
 import { ToolsIndex } from './pages/Tools/ToolsIndex';
 import { KnowledgeBase } from './pages/KnowledgeBase';
 import { FireworksPage } from './pages/FireworksPage';
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/tools" element={<ToolsIndex />} />
             <Route path="/tools/us-address" element={<USAddressGenerator />} />
             <Route path="/tools/apple-id-shared" element={<AppleIdShared />} />
+            <Route path="/tools/image-compress" element={<ImageCompressor />} />
             <Route path="/knowledge-base" element={<KnowledgeBase />} />
           </Route>
         </Routes>

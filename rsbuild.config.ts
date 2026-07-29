@@ -105,6 +105,9 @@ export default async () =>
       },
       tools: {
         rspack: {
+          experiments: {
+            asyncWebAssembly: true,
+          },
           module: {
             rules: [
               {
@@ -114,6 +117,10 @@ export default async () =>
               {
                 test: /\.glsl$/,
                 type: 'asset/source',
+              },
+              {
+                test: /\.wasm$/,
+                type: 'asset/resource',
               },
             ],
           },
