@@ -6,11 +6,14 @@ import {
   useRef,
   useState,
   type RefObject,
+  type MouseEvent as ReactMouseEvent,
 } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { animate } from 'animejs';
 import { BookOpen, Ellipsis, Wrench } from 'lucide-react';
 import { usePreferences } from '../context/PreferencesContext';
+import { useKnowledgeGate } from './KnowledgeBaseGate';
+import { isKnowledgeUnlocked } from '../lib/knowledge-gate';
 import { Glass } from './ul-liquid-glass';
 import { cn } from '../lib/cn';
 
@@ -155,9 +158,20 @@ const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
   pathname: string;
 }) {
   const { t, locale } = usePreferences();
+  const navigate = useNavigate();
+  const { requestUnlock } = useKnowledgeGate();
   const isZh = locale === 'zh';
   const knowledgeActive = pathname === '/knowledge-base' || pathname.startsWith('/knowledge-base/');
   const toolsActive = pathname === '/tools' || pathname.startsWith('/tools/');
+
+  const goKnowledge = (e: ReactMouseEvent) => {
+    e.preventDefault();
+    if (isKnowledgeUnlocked()) {
+      navigate('/knowledge-base');
+      return;
+    }
+    requestUnlock(() => navigate('/knowledge-base'));
+  };
 
   return (
     <div
@@ -168,8 +182,9 @@ const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
         'shadow-[0_1px_2px_rgba(45,42,36,0.05)]',
       )}
     >
-      <Link
-        to="/knowledge-base"
+      <a
+        href="/knowledge-base"
+        onClick={goKnowledge}
         aria-current={knowledgeActive ? 'page' : undefined}
         className={cn(
           'relative z-10 flex min-h-9 items-center gap-1.5 rounded-full px-3 text-sm font-medium sm:min-h-10 sm:px-3.5',
@@ -182,7 +197,7 @@ const KnowledgeToolsSegment = memo(function KnowledgeToolsSegment({
       >
         <BookOpen className="h-3.5 w-3.5 opacity-70" aria-hidden />
         <span>{t('nav.knowledgeBase')}</span>
-      </Link>
+      </a>
       <Link
         to="/tools"
         aria-current={toolsActive ? 'page' : undefined}
@@ -209,6 +224,8 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
   pathname: string;
 }) {
   const { t, locale } = usePreferences();
+  const navigate = useNavigate();
+  const { requestUnlock } = useKnowledgeGate();
   const isZh = locale === 'zh';
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -217,6 +234,15 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
   const anyActive = knowledgeActive || toolsActive;
 
   const close = useCallback(() => setOpen(false), []);
+
+  const goKnowledge = () => {
+    close();
+    if (isKnowledgeUnlocked()) {
+      navigate('/knowledge-base');
+      return;
+    }
+    requestUnlock(() => navigate('/knowledge-base'));
+  };
 
   useEffect(() => {
     close();
@@ -269,13 +295,13 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
             'dark:shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
           )}
         >
-          <Link
+          <button
+            type="button"
             role="menuitem"
-            to="/knowledge-base"
-            onClick={close}
+            onClick={goKnowledge}
             aria-current={knowledgeActive ? 'page' : undefined}
             className={cn(
-              'flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm font-medium',
+              'flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium',
               'transition-colors duration-200',
               knowledgeActive
                 ? 'bg-muted text-foreground'
@@ -284,7 +310,7 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
           >
             <BookOpen className="h-4 w-4 opacity-70" aria-hidden />
             <span>{t('nav.knowledgeBase')}</span>
-          </Link>
+          </button>
           <Link
             role="menuitem"
             to="/tools"

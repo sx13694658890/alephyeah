@@ -2,16 +2,48 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-07-23T01:55:32.123Z",
+  "syncedAt": "2026-07-29T05:50:47.559Z",
   "activeWithinDays": 180,
   "projects": [
+    {
+      "id": "garmin_crystal_face",
+      "title": "garmin_crystal_face",
+      "description": "Instrument Dawn",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/garmin_crystal_face",
+      "pushedAt": "2026-07-29T13:48:49+08:00"
+    },
+    {
+      "id": "web_rtc_develop",
+      "title": "web_rtc_develop",
+      "description": "阶段 0：本地跑通 M0 双人演示",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/web_rtc_develop",
+      "pushedAt": "2026-07-29T09:47:49+08:00"
+    },
+    {
+      "id": "crawler-media",
+      "title": "crawler-media",
+      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/crawler-media",
+      "pushedAt": "2026-07-28T18:37:04+08:00"
+    },
     {
       "id": "shaine_go",
       "title": "shaine_go",
       "description": "基于 Firebase Auth + Realtime Database 的 pnpm monorepo 演示应用：个人笔记、多人协同纯文本文档，以及可选的 DeepSeek 错误分析服务。前端为 Vite + React + Tailwind + shadcn/ui。",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/shaine_go",
-      "pushedAt": "2026-07-23T09:49:49+08:00"
+      "pushedAt": "2026-07-24T14:03:30+08:00"
+    },
+    {
+      "id": "horizon",
+      "title": "Horizon",
+      "description": "你只需享受新闻，剩下交给 Horizon。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/horizon",
+      "pushedAt": "2026-07-23T18:58:18+08:00"
     },
     {
       "id": "astryx",
@@ -44,14 +76,6 @@
       "tags": [],
       "href": "https://gitee.com/codeing-rz/ai_colaction_data",
       "pushedAt": "2026-07-10T17:37:12+08:00"
-    },
-    {
-      "id": "crawler-media",
-      "title": "crawler-media",
-      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/crawler-media",
-      "pushedAt": "2026-07-08T22:27:07+08:00"
     },
     {
       "id": "codex-orange-book",

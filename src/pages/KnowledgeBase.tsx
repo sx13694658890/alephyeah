@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BookOpen,
   FileText,
@@ -7,6 +8,7 @@ import {
   Hash,
   Loader2,
   Search,
+  Shield,
   X,
 } from 'lucide-react';
 import { DocumentModal } from '../components/documents/DocumentModal';
@@ -297,6 +299,30 @@ export const KnowledgeBase = () => {
           </button>
         ) : null}
       </div>
+
+      <Link
+        to="/knowledge-base/authenticator"
+        className={cn(
+          'mb-8 flex items-center gap-4 rounded-2xl border border-border bg-background p-4 sm:p-5',
+          'transition-[border-color,box-shadow,transform] duration-300',
+          'hover:border-accent/30 hover:shadow-md active:scale-[0.99]',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30',
+        )}
+      >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/12 text-accent">
+          <Shield className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-base font-medium text-foreground">
+            {isZh ? '身份验证器' : 'Authenticator'}
+          </h2>
+          <p className="mt-0.5 text-sm text-foreground/55">
+            {isZh
+              ? '本地双因素验证码，账号只保存在本机。'
+              : 'Local two-factor codes kept only on this device.'}
+          </p>
+        </div>
+      </Link>
 
       {loading ? (
         <div className="flex items-center justify-center py-16">

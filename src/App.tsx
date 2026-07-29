@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PreferencesProvider } from './context/PreferencesContext';
 import { Layout } from './components/Layout';
+import { KnowledgeGateGuard } from './components/KnowledgeBaseGate';
 import { Home } from './pages/Home';
 import { Projects } from './pages/Projects';
 import { Documents } from './pages/Documents';
@@ -12,6 +13,7 @@ import { AppleIdShared } from './pages/Tools/AppleIdShared';
 import { ImageCompressor } from './pages/Tools/ImageCompressor';
 import { ToolsIndex } from './pages/Tools/ToolsIndex';
 import { KnowledgeBase } from './pages/KnowledgeBase';
+import { Authenticator } from './pages/KnowledgeBase/Authenticator';
 import { FireworksPage } from './pages/FireworksPage';
 
 const App = () => {
@@ -31,7 +33,22 @@ const App = () => {
             <Route path="/tools/us-address" element={<USAddressGenerator />} />
             <Route path="/tools/apple-id-shared" element={<AppleIdShared />} />
             <Route path="/tools/image-compress" element={<ImageCompressor />} />
-            <Route path="/knowledge-base" element={<KnowledgeBase />} />
+            <Route
+              path="/knowledge-base"
+              element={
+                <KnowledgeGateGuard>
+                  <KnowledgeBase />
+                </KnowledgeGateGuard>
+              }
+            />
+            <Route
+              path="/knowledge-base/authenticator"
+              element={
+                <KnowledgeGateGuard>
+                  <Authenticator />
+                </KnowledgeGateGuard>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>
