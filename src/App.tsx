@@ -13,7 +13,6 @@ import { AppleIdShared } from './pages/Tools/AppleIdShared';
 import { ImageCompressor } from './pages/Tools/ImageCompressor';
 import { ToolsIndex } from './pages/Tools/ToolsIndex';
 import { KnowledgeBase } from './pages/KnowledgeBase';
-import { Authenticator } from './pages/KnowledgeBase/Authenticator';
 import { FireworksPage } from './pages/FireworksPage';
 
 const App = () => {
@@ -38,14 +37,6 @@ const App = () => {
               element={
                 <KnowledgeGateGuard>
                   <KnowledgeBase />
-                </KnowledgeGateGuard>
-              }
-            />
-            <Route
-              path="/knowledge-base/authenticator"
-              element={
-                <KnowledgeGateGuard>
-                  <Authenticator />
                 </KnowledgeGateGuard>
               }
             />
