@@ -70,6 +70,10 @@ export const messages = {
       error: 'Failed to load projects. Please try again.',
       retry: 'Retry',
       noDescription: 'No description yet.',
+      activeTitle: 'In Progress',
+      activeSubtitle: 'Live deployments currently under active development.',
+      repoTitle: 'Repositories',
+      repoSubtitle: 'Synced from Gitee.',
     },
     documents: {
       title: 'Documents',
@@ -222,6 +226,10 @@ export const messages = {
       error: '项目列表加载失败，请重试。',
       retry: '重试',
       noDescription: '暂无描述。',
+      activeTitle: '正在进行',
+      activeSubtitle: '线上运行中、仍在持续迭代的项目。',
+      repoTitle: '代码仓库',
+      repoSubtitle: '从 Gitee 同步的仓库列表。',
     },
     documents: {
       title: '文档',
