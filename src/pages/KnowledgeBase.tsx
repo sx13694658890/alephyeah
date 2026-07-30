@@ -395,46 +395,56 @@ export const KnowledgeBase = () => {
             <div className="fixed inset-0 z-40 sm:hidden" role="presentation">
               <button
                 type="button"
-                className="absolute inset-0 bg-foreground/20 backdrop-blur-sm"
+                className="absolute inset-0 bg-foreground/25 backdrop-blur-[2px]"
                 onClick={() => setSidebarOpen(false)}
                 aria-label={isZh ? '关闭目录' : 'Close folders'}
               />
-              <div className="absolute left-0 top-0 z-10 flex h-full w-60 flex-col border-r border-border bg-background p-4 pt-20 shadow-xl">
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="text-xs font-medium text-foreground/60">
+              <div
+                className={cn(
+                  'absolute left-0 top-0 z-10 flex h-full w-[min(18rem,82vw)] flex-col',
+                  'border-r border-border bg-background shadow-xl',
+                  'pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]',
+                )}
+              >
+                <div className="mb-3 flex items-center justify-between px-4">
+                  <span className="text-sm font-medium text-foreground">
                     {isZh ? '目录' : 'Folders'}
                   </span>
                   <button
                     type="button"
                     onClick={() => setSidebarOpen(false)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-foreground/40 hover:bg-muted"
+                    className="flex h-10 w-10 items-center justify-center rounded-full text-foreground/45 hover:bg-muted"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedDir(null);
-                    setSidebarOpen(false);
-                  }}
-                  className={cn(
-                    'mb-1 flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs',
-                    selectedDir === null ? 'bg-accent/10 font-medium text-accent' : 'text-foreground/60',
-                  )}
-                >
-                  <FolderOpen className="h-3.5 w-3.5" />
-                  {isZh ? '全部笔记' : 'All notes'}
-                </button>
-                <KnowledgeTree
-                  tree={manifest.dirTree}
-                  depth={0}
-                  selectedDir={selectedDir}
-                  onSelect={(path) => {
-                    setSelectedDir(path);
-                    setSidebarOpen(false);
-                  }}
-                />
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDir(null);
+                      setSidebarOpen(false);
+                    }}
+                    className={cn(
+                      'mb-1 flex w-full items-center gap-2 rounded-lg px-2.5 py-2.5 text-left text-sm',
+                      selectedDir === null
+                        ? 'bg-accent/10 font-medium text-accent'
+                        : 'text-foreground/70',
+                    )}
+                  >
+                    <FolderOpen className="h-4 w-4" />
+                    {isZh ? '全部笔记' : 'All notes'}
+                  </button>
+                  <KnowledgeTree
+                    tree={manifest.dirTree}
+                    depth={0}
+                    selectedDir={selectedDir}
+                    onSelect={(path) => {
+                      setSelectedDir(path);
+                      setSidebarOpen(false);
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ) : null}

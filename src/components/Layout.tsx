@@ -9,7 +9,6 @@ export const Layout = () => {
     <KnowledgeGateProvider>
       <div className="relative min-h-screen overflow-x-clip bg-background">
         <HeroScene />
-        {/* 顶部环境光：与导航玻璃形成色差，折射更明显 */}
         <div
           className="pointer-events-none fixed inset-x-0 top-0 z-[1] h-[min(42vh,320px)] dark:opacity-80"
           aria-hidden
@@ -20,7 +19,8 @@ export const Layout = () => {
         />
         <PreferencesBar />
         <Navbar />
-        <main className="relative z-10 mx-auto max-w-5xl px-[max(1.25rem,env(safe-area-inset-left))] pb-[max(5rem,env(safe-area-inset-bottom))] pt-[max(7.25rem,calc(env(safe-area-inset-top)+6rem))] sm:px-6 sm:pt-28 lg:max-w-6xl">
+        {/* 移动端单行顶栏后内容上移，对齐文档站阅读节奏 */}
+        <main className="page-main relative z-10 mx-auto w-full max-w-5xl lg:max-w-6xl">
           <Outlet />
         </main>
       </div>

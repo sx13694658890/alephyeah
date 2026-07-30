@@ -14,6 +14,8 @@ import { BookOpen, Ellipsis, Wrench } from 'lucide-react';
 import { usePreferences } from '../context/PreferencesContext';
 import { useKnowledgeGate } from './KnowledgeBaseGate';
 import { isKnowledgeUnlocked } from '../lib/knowledge-gate';
+import { LocaleToggle } from './LocaleToggle';
+import { ThemeModeToggle } from './ThemeModeToggle';
 import { Glass } from './ul-liquid-glass';
 import { cn } from '../lib/cn';
 
@@ -137,7 +139,7 @@ const NavTrack = memo(function NavTrack({
             key={to}
             to={to}
             className={cn(
-              'relative z-10 flex min-h-10 shrink-0 items-center justify-center rounded-full px-3 text-sm font-medium sm:min-h-11 sm:px-3.5',
+              'relative z-10 flex min-h-11 shrink-0 items-center justify-center rounded-full px-3 text-sm font-medium sm:min-h-11 sm:px-3.5',
               'transition-colors duration-300 ease-out active:scale-[0.97]',
               'motion-safe:sm:hover:scale-[1.03]',
               active ? 'text-foreground' : 'text-foreground/50 sm:hover:text-foreground/90',
@@ -289,7 +291,7 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
         <div
           role="menu"
           className={cn(
-            'absolute right-0 top-full z-50 mt-2 min-w-[10.5rem]',
+            'absolute right-0 top-full z-50 mt-2 w-[min(18rem,calc(100vw-1.5rem))]',
             'rounded-2xl border border-border bg-background p-1.5',
             'shadow-[0_12px_40px_rgba(45,42,36,0.14),0_2px_8px_rgba(45,42,36,0.08)]',
             'dark:shadow-[0_12px_40px_rgba(0,0,0,0.45)]',
@@ -327,6 +329,17 @@ const KnowledgeToolsMobileMenu = memo(function KnowledgeToolsMobileMenu({
             <Wrench className="h-4 w-4 opacity-70" aria-hidden />
             <span>{isZh ? '工具' : 'Tools'}</span>
           </Link>
+
+          <div className="my-1.5 border-t border-border/70" />
+          <div className="space-y-2 px-2 py-2">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-foreground/40">
+              {isZh ? '偏好' : 'Prefs'}
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <LocaleToggle />
+              <ThemeModeToggle />
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -366,13 +379,13 @@ export const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className="fixed inset-x-0 top-0 z-50 px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-[max(3.25rem,calc(env(safe-area-inset-top)+2.5rem))] opacity-0 sm:pr-[max(9rem,calc(env(safe-area-inset-right)+8rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))]"
+      className="fixed inset-x-0 top-0 z-50 px-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))] pt-[max(0.5rem,env(safe-area-inset-top))] opacity-0 sm:pr-[max(9rem,calc(env(safe-area-inset-right)+8rem))] sm:pt-[max(0.75rem,env(safe-area-inset-top))]"
     >
       <div className="mx-auto flex w-full min-w-0 max-w-5xl justify-center">
         <Glass
           className={cn(
             'nav-scroll nav-glass w-full min-w-0 max-w-full overflow-visible sm:w-auto sm:max-w-[calc(100vw-4rem)]',
-            'rounded-[1.75rem] px-1.5 py-1',
+            'rounded-2xl px-1 py-1 sm:rounded-[1.75rem] sm:px-1.5',
             'border border-white/65 bg-linear-to-b from-white/55 via-white/38 to-white/22',
             'shadow-[0_10px_40px_rgba(45,42,36,0.1),0_2px_8px_rgba(45,42,36,0.06),inset_0_1px_0_rgba(255,255,255,0.75)]',
             'ring-1 ring-accent/20',
