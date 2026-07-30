@@ -1,0 +1,37 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/address-generate/:country",
+      "mountPath": "/api/address-generate",
+      "method": "GET",
+      "module": [
+        "api/address-generate/[country].ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/address-generate/:country",
+      "mountPath": "/api/address-generate",
+      "method": "OPTIONS",
+      "module": [
+        "api/address-generate/[country].ts:onRequestOptions"
+      ]
+    },
+    {
+      "routePath": "/api/apple-id-shared",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/apple-id-shared.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/apple-id-shared",
+      "mountPath": "/api",
+      "method": "OPTIONS",
+      "module": [
+        "api/apple-id-shared.ts:onRequestOptions"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
