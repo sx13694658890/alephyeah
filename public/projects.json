@@ -2,9 +2,41 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-07-29T05:50:47.559Z",
+  "syncedAt": "2026-08-03T08:30:42.226Z",
   "activeWithinDays": 180,
   "projects": [
+    {
+      "id": "electronic_photo",
+      "title": "electronic_photo",
+      "description": "uni-app Vue3 + TypeScript + Vite 的微信小程序基础壳，后续用于电子证件照生成与排版。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/electronic_photo",
+      "pushedAt": "2026-08-02T06:57:28+08:00"
+    },
+    {
+      "id": "remove_watermark_miniprogram",
+      "title": "remove_watermark_miniprogram",
+      "description": "uni-app Vue3 + TypeScript + Vite 实现的小红书、抖音、快手图片去水印工具。粘贴分享链接或分享文案后，由 uniCloud 云函数抓取页面并解析原图 CDN 地址，在页面内完成预览和保存到相册。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/remove_watermark_miniprogram",
+      "pushedAt": "2026-08-02T05:28:58+08:00"
+    },
+    {
+      "id": "shaine_go",
+      "title": "shaine_go",
+      "description": "基于 Firebase Auth + Realtime Database 的 pnpm monorepo 演示应用：个人笔记、多人协同纯文本文档，以及可选的 DeepSeek 错误分析服务。前端为 Vite + React + Tailwind + shadcn/ui。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/shaine_go",
+      "pushedAt": "2026-07-30T09:16:32+08:00"
+    },
+    {
+      "id": "crawler-media",
+      "title": "crawler-media",
+      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/crawler-media",
+      "pushedAt": "2026-07-29T21:50:16+08:00"
+    },
     {
       "id": "garmin_crystal_face",
       "title": "garmin_crystal_face",
@@ -20,22 +52,6 @@
       "tags": [],
       "href": "https://gitee.com/codeing-rz/web_rtc_develop",
       "pushedAt": "2026-07-29T09:47:49+08:00"
-    },
-    {
-      "id": "crawler-media",
-      "title": "crawler-media",
-      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/crawler-media",
-      "pushedAt": "2026-07-28T18:37:04+08:00"
-    },
-    {
-      "id": "shaine_go",
-      "title": "shaine_go",
-      "description": "基于 Firebase Auth + Realtime Database 的 pnpm monorepo 演示应用：个人笔记、多人协同纯文本文档，以及可选的 DeepSeek 错误分析服务。前端为 Vite + React + Tailwind + shadcn/ui。",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/shaine_go",
-      "pushedAt": "2026-07-24T14:03:30+08:00"
     },
     {
       "id": "horizon",
