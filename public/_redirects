@@ -1,11 +1,4 @@
-# SPA 客户端路由：有真实文件时优先静态资源，不会命中这些规则
-/projects /index.html 200
-/documents /index.html 200
-/dependencies /index.html 200
-/about /index.html 200
-/tools /index.html 200
-/tools/* /index.html 200
-/knowledge-base /index.html 200
-/knowledge-base/* /index.html 200
-/books/* /index.html 200
-/effects/* /index.html 200
+# Intentionally empty.
+# No root 404.html → Cloudflare Pages SPA mode serves index.html for client routes.
+# public/static/404.html + public/assets/404.html → missing hashed assets return real 404
+# (not index.html), which avoids MIME "text/html" on .js requests.

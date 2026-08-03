@@ -270,6 +270,15 @@ async function main() {
   const files = await walkDir(VAULT_PATH, VAULT_PATH);
   console.log(`[sync-obsidian] 发现 ${files.length} 个文件`);
 
+  // Vault 为空时不要覆盖已有索引（避免本机路径不可用时把线上知识库清空）
+  if (files.length === 0) {
+    const indexPath = join(OUTPUT_DIR, 'index.json');
+    if (existsSync(indexPath)) {
+      console.warn('[sync-obsidian] vault 无文件，跳过写入，保留现有 index.json');
+      return;
+    }
+  }
+
   const notes = [];
   for (const file of files) {
     try {

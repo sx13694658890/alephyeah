@@ -2,9 +2,17 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-08-03T08:30:42.226Z",
+  "syncedAt": "2026-08-03T09:34:51.012Z",
   "activeWithinDays": 180,
   "projects": [
+    {
+      "id": "garmin_bird",
+      "title": "garmin_bird",
+      "description": "",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/garmin_bird",
+      "pushedAt": "2026-08-03T16:30:51+08:00"
+    },
     {
       "id": "electronic_photo",
       "title": "electronic_photo",
@@ -136,7 +144,7 @@
     {
       "id": "hot_runner",
       "title": "hot_runner",
-      "description": "Hot Runner 技术管理平台",
+      "description": "热流道流程 解决痛点问题",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/hot_runner",
       "pushedAt": "2026-06-01T16:46:21+08:00"
@@ -144,7 +152,7 @@
     {
       "id": "midway_service",
       "title": "midway_service",
-      "description": "基于 Midway 构建的 Node.js 服务端项目，面向 Web、全栈、微服务、RPC、Socket、Serverless 等场景提供统一的后端研发能力。",
+      "description": "",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/midway_service",
       "pushedAt": "2026-05-25T17:25:50+08:00"
@@ -152,7 +160,7 @@
     {
       "id": "cad_render",
       "title": "cad_render",
-      "description": "基于 React + TypeScript + Vite 的前端项目。",
+      "description": "cad2d cad3d render",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/cad_render",
       "pushedAt": "2026-05-22T16:22:25+08:00"
@@ -160,7 +168,7 @@
     {
       "id": "test_api",
       "title": "test_api",
-      "description": "商品 API 服务（FastAPI）",
+      "description": "",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/test_api",
       "pushedAt": "2026-05-20T08:28:10+08:00"

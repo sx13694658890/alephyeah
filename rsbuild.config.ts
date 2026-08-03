@@ -95,6 +95,15 @@ export default async () =>
         entry: {
           index: './src/index.tsx',
         },
+        define: {
+          // Bump whenever asset URLs must change (browser/edge cache poison)
+          'process.env.ALEPHYEAH_ASSET_EPOCH': JSON.stringify('2026-08-03-mime4'),
+        },
+      },
+      performance: {
+        chunkSplit: {
+          strategy: 'split-by-experience',
+        },
       },
       dev: {
         setupMiddlewares: [

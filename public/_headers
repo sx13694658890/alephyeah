@@ -1,4 +1,4 @@
-# HTML：禁止缓存，避免部署后仍引用旧 hash 的 JS
+# HTML: never cache, so deploys always pick up new hashed assets
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
   X-Content-Type-Options: nosniff
@@ -7,8 +7,25 @@
   Cache-Control: no-cache, no-store, must-revalidate
   X-Content-Type-Options: nosniff
 
-# 带 hash 的静态资源：长期缓存
-/static/*
+# Asset 404 pages must not be long-cached
+/static/404.html
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+
+/assets/404.html
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+
+# Hashed build assets (existing files only; missing ones use nearest 404.html)
+/static/js/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+/static/css/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+/static/wasm/*
   Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff
 

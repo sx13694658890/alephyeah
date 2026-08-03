@@ -13,5 +13,6 @@ declare module '*.glsl' {
 declare namespace NodeJS {
   interface ProcessEnv {
     PUBLIC_KNOWLEDGE_PASSWORD?: string;
+    ALEPHYEAH_ASSET_EPOCH?: string;
   }
 }
