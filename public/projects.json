@@ -2,9 +2,25 @@
   "version": 1,
   "source": "gitee",
   "username": "codeing-rz",
-  "syncedAt": "2026-08-03T09:34:51.012Z",
+  "syncedAt": "2026-08-06T08:12:21.616Z",
   "activeWithinDays": 180,
   "projects": [
+    {
+      "id": "crawler-media",
+      "title": "crawler-media",
+      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/crawler-media",
+      "pushedAt": "2026-08-06T15:47:36+08:00"
+    },
+    {
+      "id": "remove_watermark_miniprogram",
+      "title": "remove_watermark_miniprogram",
+      "description": "uni-app Vue3 + TypeScript + Vite 实现的小红书、抖音、快手图片去水印工具。粘贴分享链接或分享文案后，由 uniCloud 云函数抓取页面并解析原图 CDN 地址，在页面内完成预览和保存到相册。",
+      "tags": [],
+      "href": "https://gitee.com/codeing-rz/remove_watermark_miniprogram",
+      "pushedAt": "2026-08-06T12:32:35+08:00"
+    },
     {
       "id": "garmin_bird",
       "title": "garmin_bird",
@@ -22,28 +38,12 @@
       "pushedAt": "2026-08-02T06:57:28+08:00"
     },
     {
-      "id": "remove_watermark_miniprogram",
-      "title": "remove_watermark_miniprogram",
-      "description": "uni-app Vue3 + TypeScript + Vite 实现的小红书、抖音、快手图片去水印工具。粘贴分享链接或分享文案后，由 uniCloud 云函数抓取页面并解析原图 CDN 地址，在页面内完成预览和保存到相册。",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/remove_watermark_miniprogram",
-      "pushedAt": "2026-08-02T05:28:58+08:00"
-    },
-    {
       "id": "shaine_go",
       "title": "shaine_go",
       "description": "基于 Firebase Auth + Realtime Database 的 pnpm monorepo 演示应用：个人笔记、多人协同纯文本文档，以及可选的 DeepSeek 错误分析服务。前端为 Vite + React + Tailwind + shadcn/ui。",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/shaine_go",
       "pushedAt": "2026-07-30T09:16:32+08:00"
-    },
-    {
-      "id": "crawler-media",
-      "title": "crawler-media",
-      "description": "🔥 MediaCrawler - 自媒体平台爬虫 🕷️",
-      "tags": [],
-      "href": "https://gitee.com/codeing-rz/crawler-media",
-      "pushedAt": "2026-07-29T21:50:16+08:00"
     },
     {
       "id": "garmin_crystal_face",
@@ -144,7 +144,7 @@
     {
       "id": "hot_runner",
       "title": "hot_runner",
-      "description": "热流道流程 解决痛点问题",
+      "description": "Hot Runner 技术管理平台",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/hot_runner",
       "pushedAt": "2026-06-01T16:46:21+08:00"
@@ -152,7 +152,7 @@
     {
       "id": "midway_service",
       "title": "midway_service",
-      "description": "",
+      "description": "基于 Midway 构建的 Node.js 服务端项目，面向 Web、全栈、微服务、RPC、Socket、Serverless 等场景提供统一的后端研发能力。",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/midway_service",
       "pushedAt": "2026-05-25T17:25:50+08:00"
@@ -160,7 +160,7 @@
     {
       "id": "cad_render",
       "title": "cad_render",
-      "description": "cad2d cad3d render",
+      "description": "基于 React + TypeScript + Vite 的前端项目。",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/cad_render",
       "pushedAt": "2026-05-22T16:22:25+08:00"
@@ -168,7 +168,7 @@
     {
       "id": "test_api",
       "title": "test_api",
-      "description": "",
+      "description": "商品 API 服务（FastAPI）",
       "tags": [],
       "href": "https://gitee.com/codeing-rz/test_api",
       "pushedAt": "2026-05-20T08:28:10+08:00"

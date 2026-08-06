@@ -9,4 +9,9 @@ export const relatedLinks = [
     href: 'https://cc.wangsh.cc',
     labelKey: 'home.linkClaudeCodeTutorial',
   },
+  {
+    id: 'curlconverter',
+    href: 'https://curlconverter.com/',
+    labelKey: 'home.linkCurlConverter',
+  },
 ] as const;
